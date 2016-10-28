@@ -1,0 +1,13 @@
+---
+language: ruby
+
+rvm:
+  - 2.1.9
+  - 2.3.1
+
+sudo: false
+
+script: 'bundle exec rake validate rubocop'
+
+notifications:
+  email: false
