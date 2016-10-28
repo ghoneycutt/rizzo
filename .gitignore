@@ -1,0 +1,14 @@
+# Vim
+*.swp
+
+# OS X
+.DS_Store
+
+# Ruby
+Gemfile.lock
+
+# Vagrant
+.vagrant
+
+# dynamically generated
+environment.conf
