@@ -87,7 +87,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   end
 
   rconfig['nodes'].each do |node|
-    if node['name'] == pm_settings['name']
+    if pm_settings['name'].include?(node['name'])
       n = node.deep_merge(pm_settings)
       puppetmaster = true
     else
