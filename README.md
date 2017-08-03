@@ -5,7 +5,7 @@ role based focus. It is meant to make working with Vagrant easier and
 purpose built for layered Puppet control repositories.
 
 There should be at least one node for every role that is managed by a
-control repo. This information is stored in .rizzo.json under the
+control repo. This information is stored in `.rizzo.json` under the
 control repo. This makes it apparent what roles are available and aids
 in functional testing.
 
@@ -15,8 +15,6 @@ librarian-puppet-simple, librarian-puppet and r10k, without being
 dependent on them.
 
 Rizzo is named after Rizzo the Rat.
-
-===
 
 # Dependencies
 
@@ -38,7 +36,7 @@ Rizzo is named after Rizzo the Rat.
 
 # Setup
 
-## ~/.rizzo.json
+## `~/.rizzo.json`
 
 Change the paths to your git repos
 
@@ -84,8 +82,8 @@ specific entries in `~/.rizzo.json` and project specific entries in
 
 The control_repos array is a list of control repos. Rizzo takes the
 approach that control repos are layered. The ordering should match your
-puppetmaster['modulepath'] array. The first control repo with a
-.rizzo.json in it will have that Rizzo config used.
+`puppetmaster['modulepath']` array. The first control repo with a
+`.rizzo.json` in it will have that Rizzo config used.
 
 ### puppetmaster
 
@@ -113,7 +111,7 @@ local, which is the path on the host and owner and group which are the
 owner and group permissions the directory will be mounted with on the
 guest.
 
-## controlrepo/.rizzo.json
+## `controlrepo/.rizzo.json`
 
 ```json
 {
