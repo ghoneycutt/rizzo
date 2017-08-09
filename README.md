@@ -255,3 +255,59 @@ The command used to shutdown the system.
 Set the environment variable `RIZZO_DEBUG` to `true`.
 
 example: `RIZZO_DEBUG=true vagrant status`
+
+# Commands
+
+## `rizzo generate`
+
+These command names are suggestions. Happy to entertain different ones.
+
+Will generate 'Vagrantfile' in your top control repo. Turn existing
+Vagrantfile into an erb.
+
+`spec/spec_helper.rb` will need at least the following.
+
+Perhaps we should manage this entire file.
+
+```ruby
+RSpec.configure do |config|
+  config.hiera_config = 'hieradata/hiera.yaml'
+end
+```
+
+## `rizzo compile_test`
+
+This will likely have a `_prep`, `_clean` and `_standalone`, just as `rake
+spec` has with `puppetlabs_spec_helper`.
+
+### prep
+
+Loop through control repos and creates symlinks for each module under
+`spec/fixtures/modules`. Loop in order of control repos, and only create
+link if one does not already exist. So if a module is listed multiple
+times, the highest control repo has precedence.
+
+### standalone
+
+run tests
+
+We can generate these by looping through the nodes and using the
+following template under `spec/hosts/#{name}`. Is there a way we could
+test this directly without having to create the files?
+
+```ruby
+require 'spec_helper'
+describe 'role::#{name}' do
+	let(:precondition) { 'include ::role::#{name}' }
+
+	it { should compile }
+end
+```
+
+### clean
+
+remove the links under `top_control_repo/spec/fixtures/modules`
+
+## `rizzo install_modules`
+
+Remove `modules/` under each control repo then re-install using librarian-puppet-simple.
