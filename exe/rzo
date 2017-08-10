@@ -1,0 +1,7 @@
+#!/usr/bin/env ruby
+
+require 'rzo'
+
+app = Rzo::App.new
+exit_code = app.run
+Kernel.exit(exit_code)

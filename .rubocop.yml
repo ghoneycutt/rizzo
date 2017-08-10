@@ -6,8 +6,15 @@ AllCops:
     - vendor/**/*
     - pkg/**/*
     - spec/fixtures/**/*
+    - lib/rzo/trollop.rb
 
 # Cop's to ignore
+
+Lint/UnneededDisable:
+  Enabled: false
+
+Layout/MultilineOperationIndentation:
+  Enabled: false
 
 # With this enabled it suggests a change that will break the Gemfile
 Lint/AssignmentInCondition:
@@ -18,7 +25,7 @@ Metrics/LineLength:
 
 # This is a good idea, but does not line up the rest of the lines making it
 # harder to read
-Style/IndentHash:
+Layout/IndentHash:
   Enabled: false
 
 Style/Next:

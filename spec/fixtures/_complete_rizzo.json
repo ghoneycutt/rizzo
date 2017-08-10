@@ -1,0 +1,85 @@
+{
+  "defaults": {
+    "bootstrap_repo_path": "/Users/jeff/projects/acme/bootstrap",
+    "bootstrap_script_path": "bootstrap_puppet4.sh",
+    "bootstrap_script_args": "-l -f `hostname -f`",
+    "bootstrap_guest_path": "/tmp/bootstrap_puppet4",
+    "box": "el6-rc5",
+    "box_url": "https://artifactory.acme.net/artifactory/infra-vagrant-local/centos-6-x86-64-acme-2017-06-14t13-27-20-0400.box",
+    "box_download_checksum": "37f67caf1038992207555513504e37258c29e2e9",
+    "box_download_checksum_type": "sha1",
+    "memory": "1024",
+    "netmask": "255.255.255.0",
+    "update_packages": true,
+    "update_packages_command": "yum -y update",
+    "shutdown": true,
+    "shutdown_command": "/sbin/shutdown -h now"
+  },
+  "control_repos": [
+    "/Users/jeff/projects/acme/puppetdata",
+    "/Users/jeff/projects/acme/ghoneycutt-modules"
+  ],
+  "puppetmaster": {
+    "name": [
+      "puppetca",
+      "puppet"
+    ],
+    "modulepath": [
+      "./modules",
+      "./puppetdata/modules",
+      "./ghoneycutt/modules"
+    ],
+    "synced_folders": {
+      "/repos/puppetdata": {
+        "local": "/Users/jeff/projects/acme/puppetdata",
+        "owner": "root",
+        "group": "root"
+      },
+      "/repos/ghoneycutt": {
+        "local": "/Users/jeff/projects/acme/ghoneycutt-modules",
+        "owner": "root",
+        "group": "root"
+      }
+    }
+  },
+  "nodes": [
+    {
+      "name": "puppetca",
+      "hostname": "puppetca.acme.com",
+      "forwarded_ports": [
+        {
+          "guest": "8140",
+          "host": "8140"
+        }
+      ],
+      "ip": "172.16.100.5",
+      "memory": "2048"
+    },
+    {
+      "name": "puppet",
+      "hostname": "puppet.acme.com",
+      "ip": "172.16.100.6",
+      "memory": "2048"
+    },
+    {
+      "name": "dns",
+      "hostname": "dns.acme.com",
+      "ip": "172.16.100.8"
+    },
+    {
+      "name": "logs",
+      "hostname": "logs.acme.com",
+      "ip": "172.16.100.12"
+    },
+    {
+      "name": "mail",
+      "hostname": "mail.acme.com",
+      "ip": "172.16.100.13"
+    },
+    {
+      "name": "jumpbox",
+      "hostname": "jumpbox.acme.com",
+      "ip": "172.16.100.26"
+    }
+  ]
+}
