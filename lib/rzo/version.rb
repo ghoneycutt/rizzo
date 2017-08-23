@@ -5,7 +5,7 @@ module Rzo
   # The authoritative location of the rzo version.  It should be possible to
   # `require 'rizzo/version'` and access `Rizzo::VERSION` from third party
   # libraries and the gemspec.  The version is defined as a Semantic Version.
-  VERSION = '0.1.0'.freeze
+  VERSION = '0.2.0'.freeze
 
   ##
   # Return the SemVer string, e.g. `"0.1.0"`
