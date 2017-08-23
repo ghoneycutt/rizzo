@@ -10,9 +10,6 @@ Gemfile.lock
 # Vagrant
 .vagrant
 
-# dynamically generated
-environment.conf
-
 /.envrc
 
 # Gem
