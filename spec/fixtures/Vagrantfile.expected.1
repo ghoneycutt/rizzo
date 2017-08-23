@@ -1,0 +1,11 @@
+# This file generated with Rizzo 0.1.0 on 2017-08-18 13:00:09 -0700
+# https://github.com/ghoneycutt/rizzo
+Vagrant.configure(2) do |config|
+  # use 'vagrant plugin install vagrant-proxyconf' to install
+  if Vagrant.has_plugin?('vagrant-proxyconf')
+    config.proxy.http  = ENV['HTTP_PROXY']  if ENV['HTTP_PROXY']
+    config.proxy.https = ENV['HTTPS_PROXY'] if ENV['HTTPS_PROXY']
+  end
+end
+# -*- mode: ruby -*-
+# vim:ft=ruby

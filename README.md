@@ -16,11 +16,58 @@ dependent on them.
 
 Rizzo is named after Rizzo the Rat.
 
+# Installation
+
+Add the rizzo gem to your control repository `Gemfile`.  For example, in
+`puppetdata`:
+
+```diff
+diff --git a/Gemfile b/Gemfile
+index 572f681..5c2f3b0 100644
+--- a/Gemfile
++++ b/Gemfile
+@@ -20,6 +20,7 @@ gem 'puppet-lint-undef_in_function-check'
+ gem 'puppet-lint-unquoted_string-check'
+ gem 'puppet-lint-variable_contains_upcase'
+ gem 'puppet-syntax'
++gem 'rzo'
+
+ gem 'serverspec', :require => false
+ gem 'vagrant-wrapper', :require => false
+```
+
+Then update the bundle with:
+
+```shell
+bundle install --path .bundle/gems/
+bundle update rzo
+```
+
+Interact with rizzo using:
+
+```shell
+bundle exec rizzo --help
+usage: rizzo [GLOBAL OPTIONS] SUBCOMMAND [ARGS]
+Sub Commands:
+
+  config       Print out the combined rizzo json config
+  generate     Initialize Vagrantfile in top control repo
+
+Global options: (Note, command line arguments supersede ENV vars in {}'s)
+  -l, --logto=<s>     Log file to write to or keywords STDOUT, STDERR {RZO_LOGTO} (default: STDERR)
+  -s, --syslog        Log to syslog
+  -v, --verbose       Set log level to INFO
+  -d, --debug         Set log level to DEBUG
+  -c, --config=<s>    Rizzo config file {RZO_CONFIG} (default: ~/.rizzo.json)
+  -e, --version       Print version and exit
+  -h, --help          Show this message
+```
+
+Once rizzo is installed, setup your configuration file, `~/.rizzo.json`, then
+use `bundle exec rizzo generate` to write the `Vagrantfile` in your control
+repo.
+
 # Dependencies
-
-1. **deep_merge gem**
-
-    `vagrant plugin install deep_merge`
 
 1. **vagrant-vbguest gem** See
    [https://github.com/dotless-de/vagrant-vbguest](https://github.com/dotless-de/vagrant-vbguest)
@@ -71,6 +118,34 @@ Change the paths to your git repos
   }
 }
 ```
+
+Once you have `~/.rizzo.json`, change to your top level control repository and generate your `Vagrantfile`.
+
+```shell
+bundle exec rizzo generate
+```
+```
+Wrote vagrant config to Vagrantfile
+```
+
+Once the `Vagrantfile` has been generated, interact with the roles using `vagrant status`.
+
+```shell
+vagrant status
+```
+```
+Current machine states:
+
+infra-puppetfourca        not created (virtualbox)
+infra-puppetfour          not created (virtualbox)
+infra-test                not created (virtualbox)
+
+This environment represents multiple VMs. The VMs are all listed
+above with their current state. For more information about a specific
+VM, run `vagrant status NAME`.
+```
+
+## Configuration Specification
 
 ### defaults
 
@@ -250,8 +325,3 @@ ensure the guest additions are working.
 #### shutdown_command
 
 The command used to shutdown the system.
-
-# Debugging
-Set the environment variable `RIZZO_DEBUG` to `true`.
-
-example: `RIZZO_DEBUG=true vagrant status`

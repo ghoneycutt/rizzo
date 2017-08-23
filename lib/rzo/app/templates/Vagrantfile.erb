@@ -1,0 +1,55 @@
+# This file generated with Rizzo <%= Rzo.version %> on <%= timestamp %>
+# https://github.com/ghoneycutt/rizzo
+Vagrant.configure(2) do |config|
+  # use 'vagrant plugin install vagrant-proxyconf' to install
+  if Vagrant.has_plugin?('vagrant-proxyconf')
+    config.proxy.http  = ENV['HTTP_PROXY']  if ENV['HTTP_PROXY']
+    config.proxy.https = ENV['HTTPS_PROXY'] if ENV['HTTPS_PROXY']
+    <%- if no_proxy -%>
+    config.proxy.no_proxy = <%= no_proxy.inspect %>
+    <%- end -%>
+  end
+  <%- nodes.each do |nc| -%>
+
+  config.vm.define <%= nc['name'].inspect %>, autostart: false do |cfg|
+    cfg.vm.box = <%= nc['box'].inspect %>
+    cfg.vm.box_url = <%= nc['box_url'].inspect %>
+    cfg.vm.box_download_checksum = <%= nc['box_download_checksum'].inspect %>
+    cfg.vm.box_download_checksum_type = <%= nc['box_download_checksum_type'].inspect %>
+    cfg.vm.provider :virtualbox do |vb|
+      vb.customize ['modifyvm', :id, '--memory', <%= nc['memory'].inspect %>]
+    end
+    cfg.vm.hostname = <%= nc['hostname'].inspect %>
+    cfg.vm.network 'private_network',
+      ip: <%= nc['ip'].inspect %>,
+      netmask: <%= nc['netmask'].inspect %>
+    <%- [*nc['forwarded_ports']].each do |forwarded_port| -%>
+    cfg.vm.network 'forwarded_port',
+      guest: <%= forwarded_port['guest'].inspect %>,
+      host: <%= forwarded_port['host'].inspect %>
+    <%- end -%>
+    <%- synced_folders = nc['synced_folders'] || {} -%>
+    <%- synced_folders.each_pair do |k, v| -%>
+    cfg.vm.synced_folder <%= v['local'].inspect %>, <%= k.inspect %>,
+      owner: <%= v['owner'].inspect %>, group: <%= v['group'].inspect %>
+    <%- end -%>
+    <%- if nc['bootstrap_repo_path'] -%>
+    config.vm.synced_folder <%= nc['bootstrap_repo_path'].inspect %>,
+      <%= nc['bootstrap_guest_path'].inspect %>,
+      owner: 'vagrant', group: 'root'
+    <%- if nc[:puppetmaster] -%>
+    config.vm.provision 'shell', inline: <%= "echo 'modulepath = #{nc['modulepath'].join(':')}' > #{nc['bootstrap_guest_path']}/environment.conf".inspect %>
+    <%- end -%>
+    config.vm.provision 'shell', inline: <%= "/bin/bash #{nc['bootstrap_guest_path']}/#{nc['bootstrap_script_path']} #{nc['bootstrap_script_args']}".inspect %>
+    <%- if nc['update_packages'] -%>
+    config.vm.provision 'shell', inline: <%= nc['update_packages_command'].inspect %>
+    <%- end -%>
+    <%- if nc['shutdown'] -%>
+    config.vm.provision 'shell', inline: <%= nc['shutdown_command'].inspect %>
+    <%- end -%>
+    <%- end -%>
+  end
+  <%- end -%>
+end
+# -*- mode: ruby -*-
+# vim:ft=ruby

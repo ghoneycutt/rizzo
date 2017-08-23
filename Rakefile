@@ -1,11 +1,17 @@
 require 'json'
 require 'rubocop/rake_task'
+require 'bundler/gem_tasks'
+require 'rspec/core/rake_task'
+
 RuboCop::RakeTask.new
+RSpec::Core::RakeTask.new(:spec)
 
 desc 'Validation tests'
 task :validate do
   puts '=== Validating JSON (*.json) files'
-  Dir.glob('**/*.json', File::FNM_DOTMATCH).each do |json_file|
+  filelist = FileList.new('**/*.json')
+  filelist.exclude('.bundle/**')
+  filelist.each do |json_file|
     puts json_file
     json = File.read(json_file)
     JSON.parse(json)
@@ -22,4 +28,4 @@ task :validate do
   end
 end
 
-task :default => [:validate]
+task :default => %i[validate spec]
