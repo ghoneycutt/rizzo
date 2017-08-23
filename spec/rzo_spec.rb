@@ -44,6 +44,7 @@ RSpec.describe Rzo do
         output_file = StringIO.new
         expect(app.generate).to receive(:write_file).with('Vagrantfile').and_yield(output_file)
         expect(app.generate).to receive(:timestamp).and_return('2017-08-18 13:00:09 -0700')
+        expect(Rzo).to receive(:version).and_return('0.1.0')
         app.run
         output_file.rewind
         output_file.read
