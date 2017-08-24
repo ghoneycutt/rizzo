@@ -1,6 +1,5 @@
 require 'logger'
 require 'stringio'
-require 'syslog/logger'
 module Rzo
   ##
   # Support module to mix into a class for consistent logging behavior.
@@ -10,16 +9,32 @@ module Rzo
     #
     # @return [Logger] initialized logging instance
     def self.reset_logging!(opts)
-      logger = opts[:syslog] ? syslog_logger : stream_logger(opts)
+      logger = opts[:syslog] ? syslog_logger(opts) : stream_logger(opts)
       @log = logger
     end
 
     ##
     # Return a new Syslog::Logger instance configured for syslog output
-    def self.syslog_logger
-      # Use the daemon facility, matching Puppet behavior.
-      Syslog::Logger.new('rzo', Syslog::LOG_DAEMON)
+    # rubocop:disable Metrics/MethodLength
+    def self.syslog_logger(opts)
+      begin
+        require 'syslog/logger'
+        have_syslog = true
+      rescue LoadError
+        have_syslog = false
+      end
+
+      if have_syslog
+        # Use the daemon facility, matching Puppet behavior.
+        Syslog::Logger.new('rzo', Syslog::LOG_DAEMON)
+      else
+        logger = stream_logger(opts)
+        logger.warn('Syslog is not available.  Falling back to stream logging.') unless @syslog_warned
+        @syslog_warned = true
+        logger
+      end
     end
+    # rubocop:enable Metrics/MethodLength
 
     ##
     # Return a new Logger instance configured for file output
