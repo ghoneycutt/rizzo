@@ -16,6 +16,11 @@ dependent on them.
 
 Rizzo is named after Rizzo the Rat.
 
+# Compatibility
+
+Tested to work with ruby versions associated with Puppet, see
+`.travis.yml`, on OSX and Windows 2012R2.
+
 # Installation
 
 Add the rizzo gem to your control repository `Gemfile`.  For example, in

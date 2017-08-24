@@ -1,6 +1,17 @@
 # Change Log
 
-## [v0.2.0](https://github.com/ghoneycutt/rizzo/tree/v0.1.0) (2017-08-23)
+## [v0.3.0](https://github.com/ghoneycutt/rizzo/tree/v0.3.0)
+
+[Full Changelog](https://github.com/ghoneycutt/rizzo/compare/v0.2.0...v0.3.0)
+
+**Merged pull requests:**
+
+- Fix syslog LoadError on Windows [\#9](https://github.com/ghoneycutt/rizzo/pull/9) ([jeffmccune](https://github.com/jeffmccune))
+
+## [v0.2.0](https://github.com/ghoneycutt/rizzo/tree/v0.2.0) (2017-08-23)
+[Full Changelog](https://github.com/ghoneycutt/rizzo/compare/v0.1.0...v0.2.0)
+
+## [v0.1.0](https://github.com/ghoneycutt/rizzo/tree/v0.1.0) (2017-08-23)
 **Closed issues:**
 
 - configuration language should be YAML instead of JSON [\#4](https://github.com/ghoneycutt/rizzo/issues/4)
