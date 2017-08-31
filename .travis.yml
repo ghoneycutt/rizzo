@@ -12,3 +12,4 @@ rvm:
 script:
   - 'bundle exec rake validate rubocop'
   - 'bundle exec rspec'
+  - 'scripts/functional_gem_behavior.sh'
