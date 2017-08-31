@@ -86,7 +86,7 @@ module Rzo
     # parsed.
     #
     # @return [Hash<Symbol, String>] Subcommand specific options hash
-    # rubocop:disable Metrics/MethodLength
+    # rubocop:disable Metrics/MethodLength, Metrics/AbcSize, Metrics/CyclomaticComplexity
     def parse_subcommand_options!(subcommand, argv, env)
       prog_name = NAME
       case subcommand
@@ -100,11 +100,16 @@ module Rzo
           banner "#{prog_name} #{subcommand} options:"
           opt :vagrantfile, 'Output Vagrantfile', short: 'o', default: env['RZO_VAGRANTFILE'] || 'Vagrantfile'
         end
+      when 'roles'
+        Rzo::Trollop.options(argv) do
+          banner "#{prog_name} #{subcommand} options:"
+          opt :output, 'Roles output', short: 'o', default: env['RZO_OUTPUT'] || 'STDOUT'
+        end
       else
         Rzo::Trollop.die "Unknown subcommand: #{subcommand.inspect}"
       end
     end
-    # rubocop:enable Metrics/MethodLength, Metrics/AbcSize
+    # rubocop:enable Metrics/MethodLength, Metrics/AbcSize, Metrics/CyclomaticComplexity
 
     # The name of the executable, could be `rizzo` or `rzo`
     NAME = File.basename($PROGRAM_NAME).freeze
@@ -116,6 +121,7 @@ Sub Commands:
 
   config       Print out the combined rizzo json config
   generate     Initialize Vagrantfile in top control repo
+  roles        Output all roles defined in the combined config
 
 Global options: (Note, command line arguments supersede ENV vars in {}'s)
     EOBANNER
