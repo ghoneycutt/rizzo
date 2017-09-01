@@ -1,3 +1,4 @@
+require 'pathname'
 require 'rzo/logging'
 require 'deep_merge'
 module Rzo
