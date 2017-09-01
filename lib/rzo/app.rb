@@ -3,6 +3,7 @@ require 'rzo/logging'
 require 'rzo/option_parsing'
 require 'rzo/app/config'
 require 'rzo/app/generate'
+require 'rzo/app/roles'
 require 'json'
 
 module Rzo
@@ -79,6 +80,8 @@ module Rzo
         Config.new(opts, @stdout, @stderr).run
       when 'generate'
         generate.run
+      when 'roles'
+        Roles.new(opts, @stdout, @stderr).run
       else
         educate
       end

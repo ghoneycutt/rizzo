@@ -16,7 +16,13 @@ Lint/UnneededDisable:
 Layout/MultilineOperationIndentation:
   Enabled: false
 
+# if / else / end is more clear than conditional assignment
+Style/ConditionalAssignment:
+  Enabled: false
+
 # With this enabled it suggests a change that will break the Gemfile
+# Also, if name = hsh['name'] is really useful to avoid Unknown method called on
+# nil object errors.
 Lint/AssignmentInCondition:
   Enabled: false
 
