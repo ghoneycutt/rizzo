@@ -1,10 +1,12 @@
 require 'pathname'
 require 'rzo/logging'
 require 'deep_merge'
+require 'rzo/app/config_validation'
 module Rzo
   class App
     # The base class for subcommands
     class Subcommand
+      include ConfigValidation
       include Logging
       extend Logging
       # The options hash injected from the application controller via the
@@ -56,12 +58,14 @@ module Rzo
       # at first match and merge on top of local, defaults (~/.rizzo.json)
       def load_config!
         config = load_rizzo_config(opts[:config])
-        validate_config(config)
+        validate_personal_config!(config)
         repos = config['control_repos']
         @config = load_repo_configs(config, repos)
         debug "Merged configuration: \n#{JSON.pretty_generate(@config)}"
-        validate_forwarded_ports(@config)
-        validate_ip_addresses(@config)
+        # TODO: Move these validations to an instance method?
+        validate_complete_config!(@config)
+        # validate_forwarded_ports(@config)
+        # validate_ip_addresses(@config)
         @config
       end
 
@@ -86,17 +90,6 @@ module Rzo
             log.debug "Skipped #{fp} (it is not readable)"
           end
         end
-      end
-
-      ##
-      # Basic validation of the configuration file content.
-      #
-      # @param [Hash] config the configuration map
-      def validate_config(config)
-        errors = []
-        errors.push 'control_repos key is not an Array' unless config['control_repos'].is_a?(Array)
-        errors.each { |l| log.error l }
-        raise ErrorAndExit, 'Errors found in config file.  Cannot proceed.' unless errors.empty?
       end
 
       ##

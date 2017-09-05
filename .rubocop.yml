@@ -7,8 +7,11 @@ AllCops:
     - pkg/**/*
     - spec/fixtures/**/*
     - lib/rzo/trollop.rb
+    - Vagrantfile
 
 # Cop's to ignore
+Style/RedundantReturn:
+  Enabled: false
 
 Lint/UnneededDisable:
   Enabled: false

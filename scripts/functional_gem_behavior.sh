@@ -4,6 +4,10 @@
 # installs.  Run this script from the repository root.
 # can
 
+# Turn off validation for testing purposes.  We'll turn it back on for explicit
+# testing of the validation behavior
+export RZO_VALIDATE='false'
+
 set -eu
 
 STAMP=$(date +%s)
@@ -29,6 +33,33 @@ desc() {
   echo -e "${GREEN}${msg}${NC}"
   echo "${msg//?/=}"
   return 0
+}
+
+testcase() {
+  msg="$1"
+  echo -en "  * ${NC}${msg}:${NC} "
+  return 0
+}
+
+# Look for a string in some output, e.g. stderr or stdout.
+match() {
+  msg="$1"      # descriptive message
+  expected="$2" # a file
+  actual="$3"   # extended regexp
+  testcase "$msg"
+  if grep -qE "$expected" "$actual"; then
+    pass "It does."
+    return 0
+  else
+    echo "Expected $actual to contain '${expected}', but it did not." >&2
+    echo "Expected:"
+    cat "$expected"
+    echo
+    echo "Actual:"
+    cat "$actual"
+    fail "Did not find '$expected' in $actual"
+    return 1
+  fi
 }
 
 pass() {
@@ -183,7 +214,8 @@ ruby -rjson -e 'puts JSON.pretty_generate(JSON.parse(ARGF.read))' ~/.rizzo.json 
 
 desc "rzo config is expected to pretty generate the JSON config"
 stdout=$(mktemp -t XXXXXX.stdout)
-rzo config > $stdout
+stderr=$(mktemp -t XXXXXX.stderr)
+rzo config > $stdout 2> $stderr
 if diff -U2 $expected $stdout; then
   pass "It does."
 else
@@ -232,24 +264,14 @@ else
   pass "It does."
 fi
 
-desc "rzo roles with no local .rizzo.json is expected to have no output"
+desc "rzo roles with no personal .rizzo.json is expected to warn"
 stdout=$(mktemp -t XXXXXX.stdout)
 stderr=$(mktemp -t XXXXXX.stderr)
 rzo roles 2> $stderr > $stdout
-if [[ -s $stderr ]]; then
-  echo "STDERR is expected to be empty, got:"
-  cat $stderr
-  fail "rzo roles produced STDERR output."
-else
-  pass "STDERR is zero bytes"
-fi
-if [[ -s $stdout ]]; then
-  echo "STDOUT is expected to be empty, got:"
-  cat $stdout
-  fail "rzo roles produced STDOUT output."
-else
-  pass "STDOUT is zero bytes"
-fi
+
+match "warns about puppetdata not being a directory" 'WARN .*puppetdata is not a directory' $stderr
+match "warns about ghoneycutt-modules not being a directory" 'WARN .*ghoneycutt-modules is not a directory' $stderr
+match "warns about bootstrap not being a directory" 'WARN .*bootstrap is not a directory' $stderr
 
 desc "with a single puppetca role, rzo roles outputs the role name"
 if ! [[ -d "$PUPPETDATA" ]]; then

@@ -25,9 +25,11 @@ module Rzo
     # method in the app controller
     class ErrorAndExit < StandardError
       attr_accessor :exit_status
+      attr_accessor :log_fatal
       def initialize(message = nil, exit_status = 1)
         super(message)
         self.exit_status = exit_status
+        self.log_fatal = []
       end
     end
 
@@ -61,6 +63,12 @@ module Rzo
     end
 
     ##
+    # Accessor to Subcommand::Config
+    def config
+      @config ||= Config.new(opts, @stdout, @stderr)
+    end
+
+    ##
     # Override this later to allow trollop to write to an intercepted file
     # descriptor for testing.  This will avoid trollop's behavior of calling
     # exit()
@@ -77,7 +85,7 @@ module Rzo
     def run
       case opts[:subcommand]
       when 'config'
-        Config.new(opts, @stdout, @stderr).run
+        config.run
       when 'generate'
         generate.run
       when 'roles'
@@ -86,7 +94,8 @@ module Rzo
         educate
       end
     rescue ErrorAndExit => e
-      log.error e.message
+      log.fatal e.message
+      e.log_fatal.each { |m| log.fatal(m) }
       e.backtrace.each { |l| log.debug(l) }
       e.exit_status
     end
