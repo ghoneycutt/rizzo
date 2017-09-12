@@ -10,6 +10,6 @@ rvm:
   - 2.4.1
 
 script:
-  - 'bundle exec rake validate rubocop'
-  - 'bundle exec rspec'
-  - 'scripts/functional_gem_behavior.sh'
+  - 'true'
+  - 'false'
+  - 'true'
