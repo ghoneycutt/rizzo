@@ -1,7 +1,24 @@
 # Change Log
 
-## [v0.3.0](https://github.com/ghoneycutt/rizzo/tree/v0.3.0)
+## [v0.4.0](https://github.com/ghoneycutt/rizzo/tree/v0.4.0)
 
+[Full Changelog](https://github.com/ghoneycutt/rizzo/compare/v0.3.0...v0.4.0)
+
+**Closed issues:**
+
+- Add Safety Checking [\#16](https://github.com/ghoneycutt/rizzo/issues/16)
+- Fix uninitialized constant Rzo::App::Subcommand::Pathname \(NameError\) [\#14](https://github.com/ghoneycutt/rizzo/issues/14)
+- Add `rzo roles' command to list the roles [\#10](https://github.com/ghoneycutt/rizzo/issues/10)
+- Convert into a ruby gem [\#5](https://github.com/ghoneycutt/rizzo/issues/5)
+
+**Merged pull requests:**
+
+- \(\#16\) Add Directory Safety Checks [\#20](https://github.com/ghoneycutt/rizzo/pull/20) ([jeffmccune](https://github.com/jeffmccune))
+- \(\#14\) Fix uninitialized constant Pathname \(NameError\) [\#15](https://github.com/ghoneycutt/rizzo/pull/15) ([jeffmccune](https://github.com/jeffmccune))
+- Add functional testing [\#13](https://github.com/ghoneycutt/rizzo/pull/13) ([jeffmccune](https://github.com/jeffmccune))
+- \(\#10\) Add roles subcommand [\#12](https://github.com/ghoneycutt/rizzo/pull/12) ([jeffmccune](https://github.com/jeffmccune))
+
+## [v0.3.0](https://github.com/ghoneycutt/rizzo/tree/v0.3.0) (2017-08-24)
 [Full Changelog](https://github.com/ghoneycutt/rizzo/compare/v0.2.0...v0.3.0)
 
 **Merged pull requests:**
