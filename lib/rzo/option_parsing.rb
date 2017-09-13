@@ -47,7 +47,7 @@ module Rzo
     # name.
     #
     # @return [Hash<Symbol, String>] Global options
-    # rubocop:disable Metrics/MethodLength
+    # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
     def parse_global_options!(argv, env)
       semver = Rzo::VERSION
       prog_name = NAME
@@ -58,9 +58,13 @@ module Rzo
         log_msg = 'Log file to write to or keywords '\
           'STDOUT, STDERR {RZO_LOGTO}'
         opt :logto, log_msg, default: env['RZO_LOGTO'] || 'STDERR'
+        opt :validate, 'Check the configuration for common issues {RZO_VALIDATE="false"}',
+            default: env['RZO_VALIDATE'] == 'false' ? false : true
         opt :syslog, 'Log to syslog', default: false, conflicts: :logto
-        opt :verbose, 'Set log level to INFO'
-        opt :debug, 'Set log level to DEBUG'
+        opt :verbose, 'Set log level to INFO {RZO_VERBOSE="true"}',
+            default: env['RZO_VERBOSE'] == 'true'
+        opt :debug, 'Set log level to DEBUG {RZO_DEBUG="true"}',
+            default: env['RZO_DEBUG'] == 'true'
         opt :config, 'Rizzo config file {RZO_CONFIG}',
             default: env['RZO_CONFIG'] || '~/.rizzo.json'
       end

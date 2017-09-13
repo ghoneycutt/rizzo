@@ -42,5 +42,6 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'guard-shell', '~> 0.7'
   spec.add_development_dependency 'simplecov', '~> 0.14'
   spec.add_dependency 'json', '~> 2.1'
+  spec.add_dependency 'json-schema', '~> 2.8'
   spec.add_dependency 'deep_merge', '~> 1.1'
 end

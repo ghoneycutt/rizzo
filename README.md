@@ -4,6 +4,12 @@ Rizzo is a heavily customized Vagrant configuration and work flow with a
 role based focus. It is meant to make working with Vagrant easier and
 purpose built for layered Puppet control repositories.
 
+Rizzo loads a personal configuration file, `~/.rizzo.json` by default, which
+lists one or more control repositories.  Rizzo then looks for a loads a
+`.rizzo.json` configuration file located at the root of the top level control
+repository.  The top level control repository is the first listed in
+the array of control repositories in the personal configuration file.
+
 There should be at least one node for every role that is managed by a
 control repo. This information is stored in `.rizzo.json` under the
 control repo. This makes it apparent what roles are available and aids
@@ -90,7 +96,11 @@ repo.
 
 ## `~/.rizzo.json`
 
-Change the paths to your git repos
+The personal configuration file is loaded first from `~/.rizzo.json` by default.
+The global `--config` option allows the end user to specific a different path to
+the personal configuration file.
+
+Using this example, change the paths to your git repos:
 
 ```json
 {
@@ -98,6 +108,7 @@ Change the paths to your git repos
     "bootstrap_repo_path": "/Users/gh/git/bootstrap"
   },
   "control_repos": [
+    "/Users/gh/git/puppet-control-myteam",
     "/Users/gh/git/puppetdata",
     "/Users/gh/git/puppet-modules"
   ],
@@ -124,11 +135,16 @@ Change the paths to your git repos
 }
 ```
 
-Once you have `~/.rizzo.json`, change to your top level control repository and generate your `Vagrantfile`.
+Once you have a personal config file, `~/.rizzo.json`, change directories to
+your top level control repository and generate your `Vagrantfile`:
 
 ```shell
+cd ~/git/puppet-control-myteam
 bundle exec rizzo generate
 ```
+
+Expected output:
+
 ```
 Wrote vagrant config to Vagrantfile
 ```
@@ -155,8 +171,8 @@ VM, run `vagrant status NAME`.
 ### defaults
 
 The defaults hash is merged with each node entries hash. Put user
-specific entries in `~/.rizzo.json` and project specific entries in
-`${PATH_TO_CONTROL_REPO}/.rizzo.json`.
+specific entries in the personal configuration file at `~/.rizzo.json` and
+control repo specific entries in `${PATH_TO_CONTROL_REPO}/.rizzo.json`.
 
 ### control_repos
 
