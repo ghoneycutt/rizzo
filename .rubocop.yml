@@ -13,6 +13,12 @@ AllCops:
 Style/RedundantReturn:
   Enabled: false
 
+Style/InverseMethods:
+  Enabled: false
+
+Style/FrozenStringLiteralComment:
+  Enabled: false
+
 Lint/UnneededDisable:
   Enabled: false
 

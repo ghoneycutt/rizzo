@@ -59,7 +59,7 @@ module Rzo
           'STDOUT, STDERR {RZO_LOGTO}'
         opt :logto, log_msg, default: env['RZO_LOGTO'] || 'STDERR'
         opt :validate, 'Check the configuration for common issues {RZO_VALIDATE="false"}',
-            default: env['RZO_VALIDATE'] == 'false' ? false : true
+            default: !(env['RZO_VALIDATE'] == 'false')
         opt :syslog, 'Log to syslog', default: false, conflicts: :logto
         opt :verbose, 'Set log level to INFO {RZO_VERBOSE="true"}',
             default: env['RZO_VERBOSE'] == 'true'
@@ -119,7 +119,7 @@ module Rzo
     NAME = File.basename($PROGRAM_NAME).freeze
 
     # rubocop:disable Layout/IndentHeredoc
-    BANNER = <<-"EOBANNER".freeze
+    BANNER = <<-BANNERMSG.freeze
 usage: #{NAME} [GLOBAL OPTIONS] SUBCOMMAND [ARGS]
 Sub Commands:
 
@@ -128,6 +128,6 @@ Sub Commands:
   roles        Output all roles defined in the combined config
 
 Global options: (Note, command line arguments supersede ENV vars in {}'s)
-    EOBANNER
+    BANNERMSG
   end
 end

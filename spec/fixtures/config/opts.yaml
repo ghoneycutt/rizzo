@@ -1,0 +1,11 @@
+---
+:logto: '/dev/null'
+:validate: false
+:syslog: false
+:verbose: false
+:debug: false
+:config: "~/.rizzo.json"
+:version: false
+:help: false
+:subcommand: config
+:output: STDOUT
