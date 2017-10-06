@@ -5,6 +5,7 @@ require 'rzo/app/config_validation'
 module Rzo
   class App
     # The base class for subcommands
+    # rubocop:disable Metrics/ClassLength
     class Subcommand
       include ConfigValidation
       include Logging
@@ -15,6 +16,8 @@ module Rzo
       # The Rizzo configuration after loading ~/.rizzo.json (--config).
       # See #load_config!
       attr_reader :config
+      # The present working directory at startup
+      attr_reader :pwd
 
       ##
       # Delegated method to mock with fixture data.
@@ -38,6 +41,7 @@ module Rzo
         @stdout = stdout
         @stderr = stderr
         reset_logging!(opts)
+        @pwd = Dir.pwd
       end
 
       ##
@@ -59,7 +63,8 @@ module Rzo
       def load_config!
         config = load_rizzo_config(opts[:config])
         validate_personal_config!(config)
-        repos = config['control_repos']
+        repos = reorder_repos(config['control_repos'])
+        config['control_repos'] = repos
         @config = load_repo_configs(config, repos)
         debug "Merged configuration: \n#{JSON.pretty_generate(@config)}"
         # TODO: Move these validations to an instance method?
@@ -84,8 +89,8 @@ module Rzo
       def load_repo_configs(config = {}, repos = [])
         repos.each_with_object(config.dup) do |repo, hsh|
           fp = Pathname.new(repo).expand_path + '.rizzo.json'
-          if fp.readable?
-            hsh.deep_merge!(load_rizzo_config(fp))
+          if readable?(fp.to_s)
+            hsh.deep_merge!(load_rizzo_config(fp.to_s))
           else
             log.debug "Skipped #{fp} (it is not readable)"
           end
@@ -159,6 +164,50 @@ module Rzo
         when 'STDOUT' then yield @stdout
         when 'STDERR' then yield @stderr
         else File.open(filepath, 'w') { |fd| yield fd }
+        end
+      end
+
+      # helper method to to stub in tests
+      def readable?(path)
+        File.readable?(path)
+      end
+
+      ##
+      # Memoized method to return the fully qualified path to the current rizzo
+      # project directory, based on the pwd.  The project directory is the
+      # dirname of the full path to a `.rizzo.json` config file.  Return false
+      # if not a project directory.  ~/.rizzo.json is considered a personal
+      # configuration and not a project configuration.
+      #
+      # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/MethodLength, Metrics/PerceivedComplexity
+      def project_dir(path)
+        return @project_dir unless @project_dir.nil?
+        rizzo_file = Pathname.new("#{path}/.rizzo.json")
+        personal_config = Pathname.new(File.expand_path('~/.rizzo.json'))
+        iterations = 0
+        while @project_dir.nil? && iterations < 100
+          iterations += 1
+          if readable?(rizzo_file.to_s) && rizzo_file != personal_config
+            @project_dir = rizzo_file.dirname.to_s
+          else
+            rizzo_file = rizzo_file.dirname.dirname + '.rizzo.json'
+            @project_dir = false if rizzo_file.dirname.root?
+          end
+        end
+        @project_dir
+      end
+      # rubocop:enable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/MethodLength, Metrics/PerceivedComplexity
+
+      ##
+      # Given a list of control repositories, determine if the user's runtime
+      # pwd is in a control repository.  If it is, move that control repository
+      # to the top level.  If the user is inside a control repository and
+      def reorder_repos(repos = [])
+        if path = project_dir(pwd)
+          new_repos = repos - [path]
+          new_repos.unshift(path)
+        else
+          repos
         end
       end
     end
