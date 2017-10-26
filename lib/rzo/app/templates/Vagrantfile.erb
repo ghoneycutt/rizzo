@@ -34,18 +34,18 @@ Vagrant.configure(2) do |config|
       owner: <%= v['owner'].inspect %>, group: <%= v['group'].inspect %>
     <%- end -%>
     <%- if nc['bootstrap_repo_path'] -%>
-    config.vm.synced_folder <%= nc['bootstrap_repo_path'].inspect %>,
+    cfg.vm.synced_folder <%= nc['bootstrap_repo_path'].inspect %>,
       <%= nc['bootstrap_guest_path'].inspect %>,
       owner: 'vagrant', group: 'root'
     <%- if nc[:puppetmaster] -%>
-    config.vm.provision 'shell', inline: <%= "echo 'modulepath = #{nc['modulepath'].join(':')}' > #{nc['bootstrap_guest_path']}/environment.conf".inspect %>
+    cfg.vm.provision 'shell', inline: <%= "echo 'modulepath = #{nc['modulepath'].join(':')}' > #{nc['bootstrap_guest_path']}/environment.conf".inspect %>
     <%- end -%>
-    config.vm.provision 'shell', inline: <%= "/bin/bash #{nc['bootstrap_guest_path']}/#{nc['bootstrap_script_path']} #{nc['bootstrap_script_args']}".inspect %>
+    cfg.vm.provision 'shell', inline: <%= "/bin/bash #{nc['bootstrap_guest_path']}/#{nc['bootstrap_script_path']} #{nc['bootstrap_script_args']}".inspect %>
     <%- if nc['update_packages'] -%>
-    config.vm.provision 'shell', inline: <%= nc['update_packages_command'].inspect %>
+    cfg.vm.provision 'shell', inline: <%= nc['update_packages_command'].inspect %>
     <%- end -%>
     <%- if nc['shutdown'] -%>
-    config.vm.provision 'shell', inline: <%= nc['shutdown_command'].inspect %>
+    cfg.vm.provision 'shell', inline: <%= nc['shutdown_command'].inspect %>
     <%- end -%>
     <%- end -%>
   end

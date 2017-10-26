@@ -27,19 +27,19 @@ Gem::Specification.new do |spec|
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = ['lib']
 
-  spec.add_development_dependency 'rake', '~> 10.0'
-  spec.add_development_dependency 'rspec', '~> 3.0'
-  spec.add_development_dependency 'rubocop', '~> 0.49'
-  spec.add_development_dependency 'yard', '~> 0.9'
-  spec.add_development_dependency 'pry', '~> 0.10'
-  spec.add_development_dependency 'pry-stack_explorer', '~> 0.4'
   spec.add_development_dependency 'guard', '~> 2.14'
   spec.add_development_dependency 'guard-rspec', '~> 4.7'
   spec.add_development_dependency 'guard-rubocop', '~> 1.3'
-  spec.add_development_dependency 'guard-yard', '~> 2.2'
   spec.add_development_dependency 'guard-shell', '~> 0.7'
+  spec.add_development_dependency 'guard-yard', '~> 2.2'
+  spec.add_development_dependency 'pry', '~> 0.10'
+  spec.add_development_dependency 'pry-stack_explorer', '~> 0.4'
+  spec.add_development_dependency 'rake', '~> 10.0'
+  spec.add_development_dependency 'rspec', '~> 3.0'
+  spec.add_development_dependency 'rubocop', '~> 0.49'
   spec.add_development_dependency 'simplecov', '~> 0.14'
+  spec.add_development_dependency 'yard', '~> 0.9'
+  spec.add_dependency 'deep_merge', '~> 1.1'
   spec.add_dependency 'json', '~> 2.1'
   spec.add_dependency 'json-schema', '~> 2.8'
-  spec.add_dependency 'deep_merge', '~> 1.1'
 end
