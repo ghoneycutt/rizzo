@@ -319,11 +319,11 @@ Vagrant.configure(2) do |config|
       owner: "root", group: "root"
     cfg.vm.synced_folder "${HOME}/git/ghoneycutt-modules", "/repos/ghoneycutt",
       owner: "root", group: "root"
-    config.vm.synced_folder "${HOME}/git/bootstrap",
+    cfg.vm.synced_folder "${HOME}/git/bootstrap",
       nil,
       owner: 'vagrant', group: 'root'
-    config.vm.provision 'shell', inline: "echo 'modulepath = ./modules:./puppetdata/modules:./ghoneycutt/modules' > /environment.conf"
-    config.vm.provision 'shell', inline: "/bin/bash / "
+    cfg.vm.provision 'shell', inline: "echo 'modulepath = ./modules:./puppetdata/modules:./ghoneycutt/modules' > /environment.conf"
+    cfg.vm.provision 'shell', inline: "/bin/bash / "
   end
 end
 # -*- mode: ruby -*-

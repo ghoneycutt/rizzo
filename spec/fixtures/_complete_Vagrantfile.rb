@@ -26,13 +26,13 @@ Vagrant.configure(2) do |config|
       owner: "root", group: "root"
     cfg.vm.synced_folder "/Users/jeff/projects/acme/ghoneycutt-modules", "/repos/ghoneycutt",
       owner: "root", group: "root"
-    config.vm.synced_folder "/Users/jeff/projects/acme/bootstrap",
+    cfg.vm.synced_folder "/Users/jeff/projects/acme/bootstrap",
       "/tmp/bootstrap_puppet4",
       owner: 'vagrant', group: 'root'
-    config.vm.provision 'shell', inline: "echo 'modulepath = ./modules:./puppetdata/modules:./ghoneycutt/modules' > /tmp/bootstrap_puppet4/environment.conf"
-    config.vm.provision 'shell', inline: "/bin/bash /tmp/bootstrap_puppet4/bootstrap_puppet4.sh -l -f `hostname -f`"
-    config.vm.provision 'shell', inline: "yum -y update"
-    config.vm.provision 'shell', inline: "/sbin/shutdown -h now"
+    cfg.vm.provision 'shell', inline: "echo 'modulepath = ./modules:./puppetdata/modules:./ghoneycutt/modules' > /tmp/bootstrap_puppet4/environment.conf"
+    cfg.vm.provision 'shell', inline: "/bin/bash /tmp/bootstrap_puppet4/bootstrap_puppet4.sh -l -f `hostname -f`"
+    cfg.vm.provision 'shell', inline: "yum -y update"
+    cfg.vm.provision 'shell', inline: "/sbin/shutdown -h now"
   end
 
   config.vm.define "puppet", autostart: false do |cfg|
@@ -51,13 +51,13 @@ Vagrant.configure(2) do |config|
       owner: "root", group: "root"
     cfg.vm.synced_folder "/Users/jeff/projects/acme/ghoneycutt-modules", "/repos/ghoneycutt",
       owner: "root", group: "root"
-    config.vm.synced_folder "/Users/jeff/projects/acme/bootstrap",
+    cfg.vm.synced_folder "/Users/jeff/projects/acme/bootstrap",
       "/tmp/bootstrap_puppet4",
       owner: 'vagrant', group: 'root'
-    config.vm.provision 'shell', inline: "echo 'modulepath = ./modules:./puppetdata/modules:./ghoneycutt/modules' > /tmp/bootstrap_puppet4/environment.conf"
-    config.vm.provision 'shell', inline: "/bin/bash /tmp/bootstrap_puppet4/bootstrap_puppet4.sh -l -f `hostname -f`"
-    config.vm.provision 'shell', inline: "yum -y update"
-    config.vm.provision 'shell', inline: "/sbin/shutdown -h now"
+    cfg.vm.provision 'shell', inline: "echo 'modulepath = ./modules:./puppetdata/modules:./ghoneycutt/modules' > /tmp/bootstrap_puppet4/environment.conf"
+    cfg.vm.provision 'shell', inline: "/bin/bash /tmp/bootstrap_puppet4/bootstrap_puppet4.sh -l -f `hostname -f`"
+    cfg.vm.provision 'shell', inline: "yum -y update"
+    cfg.vm.provision 'shell', inline: "/sbin/shutdown -h now"
   end
 
   config.vm.define "dns", autostart: false do |cfg|
@@ -72,12 +72,12 @@ Vagrant.configure(2) do |config|
     cfg.vm.network 'private_network',
       ip: "172.16.100.8",
       netmask: "255.255.255.0"
-    config.vm.synced_folder "/Users/jeff/projects/acme/bootstrap",
+    cfg.vm.synced_folder "/Users/jeff/projects/acme/bootstrap",
       "/tmp/bootstrap_puppet4",
       owner: 'vagrant', group: 'root'
-    config.vm.provision 'shell', inline: "/bin/bash /tmp/bootstrap_puppet4/bootstrap_puppet4.sh -l -f `hostname -f`"
-    config.vm.provision 'shell', inline: "yum -y update"
-    config.vm.provision 'shell', inline: "/sbin/shutdown -h now"
+    cfg.vm.provision 'shell', inline: "/bin/bash /tmp/bootstrap_puppet4/bootstrap_puppet4.sh -l -f `hostname -f`"
+    cfg.vm.provision 'shell', inline: "yum -y update"
+    cfg.vm.provision 'shell', inline: "/sbin/shutdown -h now"
   end
 
   config.vm.define "logs", autostart: false do |cfg|
@@ -92,12 +92,12 @@ Vagrant.configure(2) do |config|
     cfg.vm.network 'private_network',
       ip: "172.16.100.12",
       netmask: "255.255.255.0"
-    config.vm.synced_folder "/Users/jeff/projects/acme/bootstrap",
+    cfg.vm.synced_folder "/Users/jeff/projects/acme/bootstrap",
       "/tmp/bootstrap_puppet4",
       owner: 'vagrant', group: 'root'
-    config.vm.provision 'shell', inline: "/bin/bash /tmp/bootstrap_puppet4/bootstrap_puppet4.sh -l -f `hostname -f`"
-    config.vm.provision 'shell', inline: "yum -y update"
-    config.vm.provision 'shell', inline: "/sbin/shutdown -h now"
+    cfg.vm.provision 'shell', inline: "/bin/bash /tmp/bootstrap_puppet4/bootstrap_puppet4.sh -l -f `hostname -f`"
+    cfg.vm.provision 'shell', inline: "yum -y update"
+    cfg.vm.provision 'shell', inline: "/sbin/shutdown -h now"
   end
 
   config.vm.define "mail", autostart: false do |cfg|
@@ -112,12 +112,12 @@ Vagrant.configure(2) do |config|
     cfg.vm.network 'private_network',
       ip: "172.16.100.13",
       netmask: "255.255.255.0"
-    config.vm.synced_folder "/Users/jeff/projects/acme/bootstrap",
+    cfg.vm.synced_folder "/Users/jeff/projects/acme/bootstrap",
       "/tmp/bootstrap_puppet4",
       owner: 'vagrant', group: 'root'
-    config.vm.provision 'shell', inline: "/bin/bash /tmp/bootstrap_puppet4/bootstrap_puppet4.sh -l -f `hostname -f`"
-    config.vm.provision 'shell', inline: "yum -y update"
-    config.vm.provision 'shell', inline: "/sbin/shutdown -h now"
+    cfg.vm.provision 'shell', inline: "/bin/bash /tmp/bootstrap_puppet4/bootstrap_puppet4.sh -l -f `hostname -f`"
+    cfg.vm.provision 'shell', inline: "yum -y update"
+    cfg.vm.provision 'shell', inline: "/sbin/shutdown -h now"
   end
 
   config.vm.define "jumpbox", autostart: false do |cfg|
@@ -132,12 +132,12 @@ Vagrant.configure(2) do |config|
     cfg.vm.network 'private_network',
       ip: "172.16.100.26",
       netmask: "255.255.255.0"
-    config.vm.synced_folder "/Users/jeff/projects/acme/bootstrap",
+    cfg.vm.synced_folder "/Users/jeff/projects/acme/bootstrap",
       "/tmp/bootstrap_puppet4",
       owner: 'vagrant', group: 'root'
-    config.vm.provision 'shell', inline: "/bin/bash /tmp/bootstrap_puppet4/bootstrap_puppet4.sh -l -f `hostname -f`"
-    config.vm.provision 'shell', inline: "yum -y update"
-    config.vm.provision 'shell', inline: "/sbin/shutdown -h now"
+    cfg.vm.provision 'shell', inline: "/bin/bash /tmp/bootstrap_puppet4/bootstrap_puppet4.sh -l -f `hostname -f`"
+    cfg.vm.provision 'shell', inline: "yum -y update"
+    cfg.vm.provision 'shell', inline: "/sbin/shutdown -h now"
   end
 end
 # -*- mode: ruby -*-
