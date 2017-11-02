@@ -5,7 +5,7 @@ role based focus. It is meant to make working with Vagrant easier and
 purpose built for layered Puppet control repositories.
 
 Rizzo loads a personal configuration file, `~/.rizzo.json` by default, which
-lists one or more control repositories.  Rizzo then looks for a loads a
+lists one or more control repositories.  Rizzo then looks for and loads a
 `.rizzo.json` configuration file located at the root of the top level control
 repository.  The top level control repository is the first listed in
 the array of control repositories in the personal configuration file.
@@ -96,7 +96,7 @@ repo.
 
 ## `~/.rizzo.json`
 
-The personal configuration file is loaded first from `~/.rizzo.json` by default.
+The personal configuration file is loaded first, from `~/.rizzo.json` by default.
 The global `--config` option allows the end user to specific a different path to
 the personal configuration file.
 
@@ -215,6 +215,7 @@ guest.
     "bootstrap_script_path": "bootstrap_puppet4.sh",
     "bootstrap_script_args": "-l -f `hostname -f`",
     "bootstrap_guest_path": "/tmp/bootstrap",
+    "boot_timeout": "500",
     "box": "centos7.box",
     "box_url": "https://vagrantboxes/centos7.box",
     "box_download_checksum": "3764a2c4ae3829aa4b50971e216c3a03736aafb2",
@@ -306,6 +307,11 @@ Path of script to be used to bootstrap a system. This is relative to
 #### bootstrap_script_args
 
 Any arguments to pass to `bootstrap_script_path`.
+
+#### boot_timeout
+
+Optional parameter that sets the amount of time is seconds that Vagrant waits for
+a node to become available via ssh before it fails.  Default is 300 seconds.
 
 #### box
 
