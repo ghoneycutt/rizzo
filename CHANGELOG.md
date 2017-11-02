@@ -1,7 +1,18 @@
 # Change Log
 
-## [v0.5.0](https://github.com/ghoneycutt/rizzo/tree/v0.5.0)
+## [v0.6.0](https://github.com/ghoneycutt/rizzo/tree/v0.6.0)
 
+[Full Changelog](https://github.com/ghoneycutt/rizzo/compare/v0.5.0...v0.6.0)
+
+**Closed issues:**
+
+- box settings are not propogating [\#26](https://github.com/ghoneycutt/rizzo/issues/26)
+
+**Merged pull requests:**
+
+- Fix config variable scope issue in Vagrantfile [\#25](https://github.com/ghoneycutt/rizzo/pull/25) ([jeffmccune](https://github.com/jeffmccune))
+
+## [v0.5.0](https://github.com/ghoneycutt/rizzo/tree/v0.5.0) (2017-10-06)
 [Full Changelog](https://github.com/ghoneycutt/rizzo/compare/v0.4.0...v0.5.0)
 
 **Merged pull requests:**
