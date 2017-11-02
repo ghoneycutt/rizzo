@@ -79,7 +79,8 @@
     {
       "name": "jumpbox",
       "hostname": "jumpbox.acme.com",
-      "ip": "172.16.100.26"
+      "ip": "172.16.100.26",
+      "boot_timeout": 300
     }
   ]
 }
