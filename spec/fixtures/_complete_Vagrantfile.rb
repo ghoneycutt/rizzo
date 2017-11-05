@@ -125,6 +125,7 @@ Vagrant.configure(2) do |config|
     cfg.vm.box_url = "https://artifactory.acme.net/artifactory/infra-vagrant-local/centos-6-x86-64-acme-2017-06-14t13-27-20-0400.box"
     cfg.vm.box_download_checksum = "37f67caf1038992207555513504e37258c29e2e9"
     cfg.vm.box_download_checksum_type = "sha1"
+    cfg.vm.boot_timeout = 300
     cfg.vm.provider :virtualbox do |vb|
       vb.customize ['modifyvm', :id, '--memory', "1024"]
     end
