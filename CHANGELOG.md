@@ -1,7 +1,14 @@
 # Change Log
 
-## [v0.6.0](https://github.com/ghoneycutt/rizzo/tree/v0.6.0)
+## [v0.7.0](https://github.com/ghoneycutt/rizzo/tree/v0.7.0)
 
+[Full Changelog](https://github.com/ghoneycutt/rizzo/compare/v0.6.0...v0.7.0)
+
+**Merged pull requests:**
+
+- Add boot\_timeout VM config option testing [\#28](https://github.com/ghoneycutt/rizzo/pull/28) ([jeffmccune](https://github.com/jeffmccune))
+
+## [v0.6.0](https://github.com/ghoneycutt/rizzo/tree/v0.6.0) (2017-11-02)
 [Full Changelog](https://github.com/ghoneycutt/rizzo/compare/v0.5.0...v0.6.0)
 
 **Closed issues:**
