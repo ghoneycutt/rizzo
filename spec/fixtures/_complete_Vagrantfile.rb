@@ -140,6 +140,53 @@ Vagrant.configure(2) do |config|
     cfg.vm.provision 'shell', inline: "yum -y update"
     cfg.vm.provision 'shell', inline: "/sbin/shutdown -h now"
   end
+
+  config.vm.define "windows", autostart: false do |cfg|
+    cfg.vm.box = "win2016"
+    cfg.vm.box_url = "https://artifactory.acme.net/artifactory/infra-vagrant-local/windows2016.box"
+    cfg.vm.box_download_checksum = "123456781038992207555513504e37258c29e2e9"
+    cfg.vm.box_download_checksum_type = "sha1"
+    cfg.vm.provider :virtualbox do |vb|
+      vb.customize ['modifyvm', :id, '--memory', "1024"]
+      vb.gui = true
+    end
+    cfg.vm.guest = :windows
+    cfg.vm.communicator = :winrm
+    cfg.vm.hostname = "windows"
+    cfg.vm.network 'private_network',
+      ip: "172.16.100.27",
+      netmask: "255.255.255.0"
+    cfg.vm.network 'forwarded_port',
+      guest: "5985",
+      host: "5985"
+    cfg.vm.synced_folder "/Users/jeff/projects/acme/bootstrap_windows",
+      "C:\\tmp\\bootstrap_puppet4",
+      owner: 'vagrant', group: 'root'
+    cfg.vm.provision 'shell', inline: "C:\\tmp\\bootstrap_puppet4\\bootstrap_puppet4.ps1 "
+  end
+
+  config.vm.define "windows2", autostart: false do |cfg|
+    cfg.vm.box = "win2016"
+    cfg.vm.box_url = "https://artifactory.acme.net/artifactory/infra-vagrant-local/windows2016.box"
+    cfg.vm.box_download_checksum = "123456781038992207555513504e37258c29e2e9"
+    cfg.vm.box_download_checksum_type = "sha1"
+    cfg.vm.provider :virtualbox do |vb|
+      vb.customize ['modifyvm', :id, '--memory', "1024"]
+    end
+    cfg.vm.guest = :windows
+    cfg.vm.communicator = :winrm
+    cfg.vm.hostname = "windows2"
+    cfg.vm.network 'private_network',
+      ip: "172.16.100.28",
+      netmask: "255.255.255.0"
+    cfg.vm.network 'forwarded_port',
+      guest: "15985",
+      host: "15985"
+    cfg.vm.synced_folder "/Users/jeff/projects/acme/bootstrap_windows",
+      "C:\\tmp\\bootstrap_puppet4",
+      owner: 'vagrant', group: 'root'
+    cfg.vm.provision 'shell', inline: "C:\\tmp\\bootstrap_puppet4\\bootstrap_puppet4.ps1 arg1 arg2"
+  end
 end
 # -*- mode: ruby -*-
 # vim:ft=ruby

@@ -81,6 +81,51 @@
       "hostname": "jumpbox.acme.com",
       "ip": "172.16.100.26",
       "boot_timeout": 300
+    },
+    {
+      "name": "windows",
+      "hostname": "windows.acme.com",
+      "windows": true,
+      "ip": "172.16.100.27",
+      "forwarded_ports": [
+        {
+          "guest": "5985",
+          "host": "5985"
+        }
+      ],
+      "gui": true,
+      "bootstrap_repo_path": "/Users/jeff/projects/acme/bootstrap_windows",
+      "bootstrap_script_path": "bootstrap_puppet4.ps1",
+      "bootstrap_script_args": "",
+      "bootstrap_guest_path": "C:\\tmp\\bootstrap_puppet4",
+      "box": "win2016",
+      "box_url": "https://artifactory.acme.net/artifactory/infra-vagrant-local/windows2016.box",
+      "box_download_checksum": "123456781038992207555513504e37258c29e2e9",
+      "box_download_checksum_type": "sha1",
+      "update_packages": "false",
+      "shutdown": "false"
+    },
+    {
+      "name": "windows2",
+      "hostname": "windows2.acme.com",
+      "windows": true,
+      "ip": "172.16.100.28",
+      "forwarded_ports": [
+        {
+          "guest": "15985",
+          "host": "15985"
+        }
+      ],
+      "bootstrap_repo_path": "/Users/jeff/projects/acme/bootstrap_windows",
+      "bootstrap_script_path": "bootstrap_puppet4.ps1",
+      "bootstrap_script_args": "arg1 arg2",
+      "bootstrap_guest_path": "C:\\tmp\\bootstrap_puppet4",
+      "box": "win2016",
+      "box_url": "https://artifactory.acme.net/artifactory/infra-vagrant-local/windows2016.box",
+      "box_download_checksum": "123456781038992207555513504e37258c29e2e9",
+      "box_download_checksum_type": "sha1",
+      "update_packages": "false",
+      "shutdown": "false"
     }
   ]
 }
