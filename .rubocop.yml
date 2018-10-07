@@ -19,9 +19,6 @@ Style/InverseMethods:
 Style/FrozenStringLiteralComment:
   Enabled: false
 
-Lint/UnneededDisable:
-  Enabled: false
-
 Layout/MultilineOperationIndentation:
   Enabled: false
 

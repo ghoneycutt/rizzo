@@ -14,8 +14,10 @@ module Rzo
       # name.  This is the same as the name of the VM.
       def roles
         return [] unless nodes = config['nodes']
+
         nodes.each_with_object([]) do |node, a|
           next unless node['name']
+
           a << node['name']
         end
       end
