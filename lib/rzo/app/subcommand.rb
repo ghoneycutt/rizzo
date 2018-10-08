@@ -24,6 +24,7 @@ module Rzo
       def self.load_rizzo_config(fpath)
         config_file = Pathname.new(fpath).expand_path
         raise ErrorAndExit, "Cannot read config file #{config_file}" unless config_file.readable?
+
         config = JSON.parse(config_file.read)
         log.debug "Loaded #{config_file}"
         config
@@ -182,6 +183,7 @@ module Rzo
       # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/MethodLength, Metrics/PerceivedComplexity
       def project_dir(path)
         return @project_dir unless @project_dir.nil?
+
         rizzo_file = Pathname.new("#{path}/.rizzo.json")
         personal_config = Pathname.new(File.expand_path('~/.rizzo.json'))
         iterations = 0
@@ -211,5 +213,6 @@ module Rzo
         end
       end
     end
+    # rubocop:enable Metrics/ClassLength
   end
 end

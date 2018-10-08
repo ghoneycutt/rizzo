@@ -19,9 +19,6 @@ Style/InverseMethods:
 Style/FrozenStringLiteralComment:
   Enabled: false
 
-Lint/UnneededDisable:
-  Enabled: false
-
 Layout/MultilineOperationIndentation:
   Enabled: false
 
@@ -50,7 +47,10 @@ Style/Next:
 Style/NonNilCheck:
   Enabled: false
 
-Style/TrailingCommaInLiteral:
+Style/TrailingCommaInArrayLiteral:
+  Enabled: false
+
+Style/TrailingCommaInHashLiteral:
   Enabled: false
 
 Style/TrailingCommaInArguments:

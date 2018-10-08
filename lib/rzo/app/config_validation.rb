@@ -304,3 +304,4 @@ module Rzo
     # rubocop:enable Metrics/ModuleLength
   end
 end
+# rubocop:enable Style/GuardClause

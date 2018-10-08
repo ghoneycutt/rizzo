@@ -129,5 +129,6 @@ Sub Commands:
 
 Global options: (Note, command line arguments supersede ENV vars in {}'s)
     BANNERMSG
+    # rubocop:enable Layout/IndentHeredoc
   end
 end

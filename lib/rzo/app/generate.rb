@@ -17,7 +17,7 @@ module Rzo
         exit_status = 0
         load_config!
         # Vagrantfile
-        erbfile = File.expand_path('../templates/Vagrantfile.erb', __FILE__)
+        erbfile = File.expand_path('templates/Vagrantfile.erb', __dir__)
         content = vagrantfile_content(erbfile, config)
         write_file(opts[:vagrantfile]) { |fd| fd.write(content) }
         say "Wrote vagrant config to #{opts[:vagrantfile]}"
@@ -82,6 +82,7 @@ module Rzo
       def proxy_config(config)
         # Proxy Setting
         return nil unless config['config']
+
         config['config']['no_proxy'] || DEFAULT_NO_PROXY
       end
 
