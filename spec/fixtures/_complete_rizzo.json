@@ -102,8 +102,8 @@
       "box_url": "https://artifactory.acme.net/artifactory/infra-vagrant-local/windows2016.box",
       "box_download_checksum": "123456781038992207555513504e37258c29e2e9",
       "box_download_checksum_type": "sha1",
-      "update_packages": "false",
-      "shutdown": "false"
+      "update_packages": false,
+      "shutdown": false
     },
     {
       "name": "windows2",
@@ -124,8 +124,8 @@
       "box_url": "https://artifactory.acme.net/artifactory/infra-vagrant-local/windows2016.box",
       "box_download_checksum": "123456781038992207555513504e37258c29e2e9",
       "box_download_checksum_type": "sha1",
-      "update_packages": "false",
-      "shutdown": "false"
+      "update_packages": false,
+      "shutdown": false
     }
   ]
 }
