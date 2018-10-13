@@ -250,6 +250,25 @@ guest.
       "name": "www-api",
       "hostname": "www-api1.example.org",
       "ip": "172.16.100.7"
+    },
+    {
+      "name": "mssql1",
+      "hostname": "mysql1.example.org",
+      "forwarded_ports": [
+        {
+          "guest": "5985",
+          "host": "5985"
+        }
+      ],
+      "ip": "172.16.100.8",
+      "windows": true,
+      "gui": true,
+      "shutdown": false,
+      "update_packages": false,
+      "box": "mwrock/Windows2016",
+      "box_url": "",
+      "box_download_checksum": "",
+      "box_download_checksum_type": ""
     }
   ]
 }
@@ -352,3 +371,14 @@ ensure the guest additions are working.
 #### shutdown_command
 
 The command used to shutdown the system.
+
+#### gui
+
+If this is set to `true` the GUI will be enabled. This brings up the
+VirtualBox window and aid in debugging on Windows systems.
+
+#### windows
+
+If this is set to `true`, extra options will be included to let Vagrant
+know this is a windows host and to use WinRM for the connect. It will
+also use the `name` entry instead of `hostname`.
