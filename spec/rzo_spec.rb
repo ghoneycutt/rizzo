@@ -14,7 +14,7 @@ RSpec.describe Rzo do
   end
 
   let(:argv) { [] }
-  let(:rizzo_config) { '_home_rizzo.json' }
+  let(:rizzo_config) { '_home_rizzo.yaml' }
   let(:expected_output) { fixture('Vagrantfile.expected.1') }
   let(:stdout) { StringIO.new }
   let(:stderr) { StringIO.new }
@@ -23,7 +23,7 @@ RSpec.describe Rzo do
     # Prevent trollop calling Kernel#exit()
     allow(Rzo::Trollop).to receive(:educate)
     # Configuration file loaded from spec fixture
-    example_config = JSON.parse(fixture(rizzo_config))
+    example_config = YAML.safe_load(fixture(rizzo_config))
     allow(Rzo::App::Subcommand).to receive(:load_rizzo_config).and_return(example_config)
     # The app instance under test
     Rzo::App.new(argv, ENV.to_hash, stdout, stderr)
@@ -56,7 +56,7 @@ RSpec.describe Rzo do
       end
 
       context 'with a full config file' do
-        let(:rizzo_config) { '_complete_rizzo.json' }
+        let(:rizzo_config) { '_complete_rizzo.yaml' }
 
         it 'has many nodes' do
           expect(subject).to eq(fixture('_complete_Vagrantfile.rb'))

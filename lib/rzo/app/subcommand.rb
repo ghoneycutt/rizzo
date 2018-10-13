@@ -2,6 +2,7 @@ require 'pathname'
 require 'rzo/logging'
 require 'deep_merge'
 require 'rzo/app/config_validation'
+require 'yaml'
 module Rzo
   class App
     # The base class for subcommands
@@ -13,7 +14,7 @@ module Rzo
       # The options hash injected from the application controller via the
       # initialize method.
       attr_reader :opts
-      # The Rizzo configuration after loading ~/.rizzo.json (--config).
+      # The Rizzo configuration after loading ~/.rizzo.yaml (--config).
       # See #load_config!
       attr_reader :config
       # The present working directory at startup
@@ -25,10 +26,10 @@ module Rzo
         config_file = Pathname.new(fpath).expand_path
         raise ErrorAndExit, "Cannot read config file #{config_file}" unless config_file.readable?
 
-        config = JSON.parse(config_file.read)
+        config = YAML.safe_load(config_file.read)
         log.debug "Loaded #{config_file}"
         config
-      rescue JSON::ParserError => e
+      rescue Psych::SyntaxError => e
         raise ErrorAndExit, "Could not parse rizzo config #{config_file} #{e.message}"
       end
 
@@ -60,14 +61,14 @@ module Rzo
       # Load rizzo configuration.  Populate @config.
       #
       # Read rizzo configuration by looping through control repos and stopping
-      # at first match and merge on top of local, defaults (~/.rizzo.json)
+      # at first match and merge on top of local, defaults (~/.rizzo.yaml)
       def load_config!
         config = load_rizzo_config(opts[:config])
         validate_personal_config!(config)
         repos = reorder_repos(config['control_repos'])
         config['control_repos'] = repos
         @config = load_repo_configs(config, repos)
-        debug "Merged configuration: \n#{JSON.pretty_generate(@config)}"
+        debug "Merged configuration: \n#{@config.to_yaml}"
         # TODO: Move these validations to an instance method?
         validate_complete_config!(@config)
         # validate_forwarded_ports(@config)
@@ -76,7 +77,7 @@ module Rzo
       end
 
       ##
-      # Given a list of repository paths, load .rizzo.json from the root of each
+      # Given a list of repository paths, load .rizzo.yaml from the root of each
       # repository and return the result merged onto config.  The merging
       # behavior is implemented by
       # [deep_merge](http://www.rubydoc.info/gems/deep_merge/1.1.1)
@@ -84,12 +85,12 @@ module Rzo
       # @param [Hash] config the starting config hash.  Repo config maps will be
       #   merged on top of this starting map.
       #
-      # @param [Array] repos the list of repositories to load .rizzo.json from.
+      # @param [Array] repos the list of repositories to load .rizzo.yaml from.
       #
       # @return [Hash] the merged configuration hash.
       def load_repo_configs(config = {}, repos = [])
         repos.each_with_object(config.dup) do |repo, hsh|
-          fp = Pathname.new(repo).expand_path + '.rizzo.json'
+          fp = Pathname.new(repo).expand_path + '.rizzo.yaml'
           if readable?(fp.to_s)
             hsh.deep_merge!(load_rizzo_config(fp.to_s))
           else
@@ -131,7 +132,7 @@ module Rzo
       # Helper to raise a duplicate port error
       def raise_port_err(port, node)
         raise ErrorAndExit, "host port #{port} on node #{node} " \
-          'is a duplicate.  Ports must be unique.  Check .rizzo.json ' \
+          'is a duplicate.  Ports must be unique.  Check .rizzo.yaml ' \
           'files in each control repository for duplicate forwarded_ports entries.'
       end
 
@@ -139,7 +140,7 @@ module Rzo
       # Helper to raise a duplicate port error
       def raise_ip_err(ip, node)
         raise ErrorAndExit, "host ip #{ip} on node #{node} " \
-          'is a duplicate.  IP addresses must be unique.  Check .rizzo.json ' \
+          'is a duplicate.  IP addresses must be unique.  Check .rizzo.yaml ' \
           'files in each control repository for duplicate ip entries'
       end
 
@@ -176,23 +177,23 @@ module Rzo
       ##
       # Memoized method to return the fully qualified path to the current rizzo
       # project directory, based on the pwd.  The project directory is the
-      # dirname of the full path to a `.rizzo.json` config file.  Return false
-      # if not a project directory.  ~/.rizzo.json is considered a personal
+      # dirname of the full path to a `.rizzo.yaml` config file.  Return false
+      # if not a project directory.  ~/.rizzo.yaml is considered a personal
       # configuration and not a project configuration.
       #
       # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/MethodLength, Metrics/PerceivedComplexity
       def project_dir(path)
         return @project_dir unless @project_dir.nil?
 
-        rizzo_file = Pathname.new("#{path}/.rizzo.json")
-        personal_config = Pathname.new(File.expand_path('~/.rizzo.json'))
+        rizzo_file = Pathname.new("#{path}/.rizzo.yaml")
+        personal_config = Pathname.new(File.expand_path('~/.rizzo.yaml'))
         iterations = 0
         while @project_dir.nil? && iterations < 100
           iterations += 1
           if readable?(rizzo_file.to_s) && rizzo_file != personal_config
             @project_dir = rizzo_file.dirname.to_s
           else
-            rizzo_file = rizzo_file.dirname.dirname + '.rizzo.json'
+            rizzo_file = rizzo_file.dirname.dirname + '.rizzo.yaml'
             @project_dir = false if rizzo_file.dirname.root?
           end
         end

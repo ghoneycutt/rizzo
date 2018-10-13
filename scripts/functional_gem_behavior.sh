@@ -90,19 +90,19 @@ debug() {
   echo -e "${BLUE}Debug:${NC} $msg" >&2
 }
 
-# Move ~/.rizzo.json out of the way if it exists
-if [[ -e ~/.rizzo.json ]]; then
-  debug "Moving ~/.rizzo.json to ~/.rizzo.json.$STAMP"
-  mv -f ~/.rizzo.json ~/.rizzo.json.$STAMP
+# Move ~/.rizzo.yaml out of the way if it exists
+if [[ -e ~/.rizzo.yaml ]]; then
+  debug "Moving ~/.rizzo.yaml to ~/.rizzo.yaml.$STAMP"
+  mv -f ~/.rizzo.yaml ~/.rizzo.yaml.$STAMP
 fi
 
 # Clean up our temp directory
 scratch=$(mktemp -d)
 export TMPDIR="$scratch"
 finish() {
-  if [[ -e ~/.rizzo.json.$STAMP ]]; then
-    mv -f ~/.rizzo.json.$STAMP ~/.rizzo.json
-    debug "Moved ~/.rizzo.json.$STAMP to ~/.rizzo.json"
+  if [[ -e ~/.rizzo.yaml.$STAMP ]]; then
+    mv -f ~/.rizzo.yaml.$STAMP ~/.rizzo.yaml
+    debug "Moved ~/.rizzo.yaml.$STAMP to ~/.rizzo.yaml"
   fi
   if [[ -d "$scratch" ]]; then
     rm -rf "$scratch"
@@ -193,26 +193,37 @@ fi
 # Puppet data repositories used by rizzo
 PUPPETDATA="${TMPDIR}/git/puppetdata"
 
-desc "With a valid ~/.rizzo.json file looking like:"
-cat > ~/.rizzo.json <<EOCONFIG
-{
-  "defaults": { "bootstrap_repo_path": "${HOME}/git/bootstrap" },
-  "control_repos": [ "${PUPPETDATA}", "${HOME}/git/ghoneycutt-modules" ],
-  "puppetmaster": {
-    "name": [ "puppetca", "puppet" ],
-    "modulepath": [ "./modules", "./puppetdata/modules", "./ghoneycutt/modules" ],
-    "synced_folders": {
-      "/repos/puppetdata": { "local": "${PUPPETDATA}", "owner": "root", "group": "root" },
-      "/repos/ghoneycutt": { "local": "${HOME}/git/ghoneycutt-modules", "owner": "root", "group": "root" }
-    }
-  }
-}
+desc "With a valid ~/.rizzo.yaml file looking like:"
+cat > ~/.rizzo.yaml <<EOCONFIG
+---
+  defaults:
+    bootstrap_repo_path: "${HOME}/git/bootstrap"
+  control_repos:
+  - ${PUPPETDATA}
+  - ${HOME}/git/ghoneycutt-modules
+  puppetmaster:
+    name:
+    - puppetca
+    - puppet
+    modulepath:
+    - ./modules
+    - ./puppetdata/modules
+    - ./ghoneycutt/modules
+    synced_folders:
+      /repos/puppetdata:
+        local: "${PUPPETDATA}"
+        owner: "root"
+        group: "root"
+      /repos/ghoneycutt:
+        local: "${HOME}/git/ghoneycutt-modules"
+        owner: "root"
+        group: "root"
 EOCONFIG
 # Print out the config
-expected=$(mktemp -t XXXXXX.rizzo.json)
-ruby -rjson -e 'puts JSON.pretty_generate(JSON.parse(ARGF.read))' ~/.rizzo.json | tee $expected
+expected=$(mktemp -t XXXXXX.rizzo.yaml)
+ruby -ryaml -e 'puts YAML.safe_load(ARGF.read).to_yaml' ~/.rizzo.yaml | tee $expected
 
-desc "rzo config is expected to pretty generate the JSON config"
+desc "rzo config is expected to pretty generate the YAML config"
 stdout=$(mktemp -t XXXXXX.stdout)
 stderr=$(mktemp -t XXXXXX.stderr)
 rzo config > $stdout 2> $stderr
@@ -264,7 +275,7 @@ else
   pass "It does."
 fi
 
-desc "rzo roles with no personal .rizzo.json is expected to warn"
+desc "rzo roles with no personal .rizzo.yaml is expected to warn"
 stdout=$(mktemp -t XXXXXX.stdout)
 stderr=$(mktemp -t XXXXXX.stderr)
 rzo roles 2> $stderr > $stdout
@@ -278,7 +289,7 @@ if ! [[ -d "$PUPPETDATA" ]]; then
   mkdir -p "$PUPPETDATA"
   debug "Created $PUPPETDATA"
 fi
-echo '{"nodes":[{"name":"puppetca"}]}' > ${PUPPETDATA}/.rizzo.json
+echo '{"nodes":[{"name":"puppetca"}]}' > ${PUPPETDATA}/.rizzo.yaml
 
 stdout=$(mktemp -t XXXXXX.stdout)
 stderr=$(mktemp -t XXXXXX.stderr)

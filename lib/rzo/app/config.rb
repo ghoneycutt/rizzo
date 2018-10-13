@@ -8,7 +8,7 @@ module Rzo
       def run
         exit_status = 0
         load_config!
-        write_file(opts[:output]) { |fd| fd.puts(JSON.pretty_generate(config)) }
+        write_file(opts[:output]) { |fd| fd.puts(config.to_yaml) }
         exit_status
       end
     end

@@ -1,0 +1,96 @@
+---
+defaults:
+  bootstrap_repo_path: "/Users/jeff/projects/acme/bootstrap"
+  bootstrap_script_path: bootstrap_puppet4.sh
+  bootstrap_script_args: "-l -f `hostname -f`"
+  bootstrap_guest_path: "/tmp/bootstrap_puppet4"
+  box: el6-rc5
+  box_url: https://artifactory.acme.net/artifactory/infra-vagrant-local/centos-6-x86-64-acme-2017-06-14t13-27-20-0400.box
+  box_download_checksum: 37f67caf1038992207555513504e37258c29e2e9
+  box_download_checksum_type: sha1
+  memory: '1024'
+  netmask: 255.255.255.0
+  update_packages: true
+  update_packages_command: yum -y update
+  shutdown: true
+  shutdown_command: "/sbin/shutdown -h now"
+control_repos:
+- "/Users/jeff/projects/acme/puppetdata"
+- "/Users/jeff/projects/acme/ghoneycutt-modules"
+puppetmaster:
+  name:
+  - puppetca
+  - puppet
+  modulepath:
+  - "./modules"
+  - "./puppetdata/modules"
+  - "./ghoneycutt/modules"
+  synced_folders:
+    "/repos/puppetdata":
+      local: "/Users/jeff/projects/acme/puppetdata"
+      owner: root
+      group: root
+    "/repos/ghoneycutt":
+      local: "/Users/jeff/projects/acme/ghoneycutt-modules"
+      owner: root
+      group: root
+nodes:
+- name: puppetca
+  hostname: puppetca.acme.com
+  forwarded_ports:
+  - guest: '8140'
+    host: '8140'
+  ip: 172.16.100.5
+  memory: '2048'
+- name: puppet
+  hostname: puppet.acme.com
+  ip: 172.16.100.6
+  memory: '2048'
+- name: dns
+  hostname: dns.acme.com
+  ip: 172.16.100.8
+- name: logs
+  hostname: logs.acme.com
+  ip: 172.16.100.12
+- name: mail
+  hostname: mail.acme.com
+  ip: 172.16.100.13
+- name: jumpbox
+  hostname: jumpbox.acme.com
+  ip: 172.16.100.26
+  boot_timeout: 300
+- name: windows
+  hostname: windows.acme.com
+  windows: true
+  ip: 172.16.100.27
+  forwarded_ports:
+  - guest: '5985'
+    host: '5985'
+  gui: true
+  bootstrap_repo_path: "/Users/jeff/projects/acme/bootstrap_windows"
+  bootstrap_script_path: bootstrap_puppet4.ps1
+  bootstrap_script_args: ''
+  bootstrap_guest_path: C:\tmp\bootstrap_puppet4
+  box: win2016
+  box_url: https://artifactory.acme.net/artifactory/infra-vagrant-local/windows2016.box
+  box_download_checksum: 123456781038992207555513504e37258c29e2e9
+  box_download_checksum_type: sha1
+  update_packages: false
+  shutdown: false
+- name: windows2
+  hostname: windows2.acme.com
+  windows: true
+  ip: 172.16.100.28
+  forwarded_ports:
+  - guest: '15985'
+    host: '15985'
+  bootstrap_repo_path: "/Users/jeff/projects/acme/bootstrap_windows"
+  bootstrap_script_path: bootstrap_puppet4.ps1
+  bootstrap_script_args: arg1 arg2
+  bootstrap_guest_path: C:\tmp\bootstrap_puppet4
+  box: win2016
+  box_url: https://artifactory.acme.net/artifactory/infra-vagrant-local/windows2016.box
+  box_download_checksum: 123456781038992207555513504e37258c29e2e9
+  box_download_checksum_type: sha1
+  update_packages: false
+  shutdown: false

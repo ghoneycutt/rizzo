@@ -5,7 +5,7 @@ RSpec.describe Rzo::App::Config do
   let(:opts) { YAML.load(fixture('config/opts.yaml')) }
   # rubocop:enable Security/YAMLLoad
   # The personal configuration file only.
-  let(:personal_config) { JSON.parse(fixture('_home_rizzo.json')) }
+  let(:personal_config) { YAML.safe_load(fixture('_home_rizzo.yaml')) }
   let(:stdout) { StringIO.new }
   let(:stderr) { StringIO.new }
   let(:subcommand) { described_class.new(opts, stdout, stderr) }
@@ -26,7 +26,7 @@ RSpec.describe Rzo::App::Config do
       subcommand.config['control_repos']
     end
 
-    context 'with no .rizzo.json in the CWD' do
+    context 'with no .rizzo.yaml in the CWD' do
       it 'uses the configured control_repos as is' do
         control_repos = personal_config['control_repos'].dup
         expect(subject).to eq(control_repos)
@@ -36,7 +36,7 @@ RSpec.describe Rzo::App::Config do
       end
     end
 
-    context 'when .rizzo.json exists in the CWD' do
+    context 'when .rizzo.yaml exists in the CWD' do
       before :each do
         expect(subcommand).to receive(:project_dir).with(Dir.pwd).and_return(Dir.pwd)
       end

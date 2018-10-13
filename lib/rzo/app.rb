@@ -4,7 +4,7 @@ require 'rzo/option_parsing'
 require 'rzo/app/config'
 require 'rzo/app/generate'
 require 'rzo/app/roles'
-require 'json'
+require 'yaml'
 
 module Rzo
   ##
