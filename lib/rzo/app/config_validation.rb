@@ -15,7 +15,7 @@ module Rzo
       # ~/.rizzo.yaml.  Minimum necessary to load the complete configuration from
       # all control repositories.
       RZO_PERSONAL_CONFIG_SCHEMA = {
-        '$schema' => 'http://json-schema.org/draft-06/schema#',
+        '$schema' => 'http://json-schema.org/draft/schema#',
         title: 'Personal Configuration',
         description: 'Rizzo personal configuration file',
         type: 'object',
@@ -60,7 +60,7 @@ module Rzo
                 items: { type: 'string' },
               },
               synced_folders: {
-                '$schema' => 'http://json-schema.org/draft-06/schema#',
+                '$schema' => 'http://json-schema.org/draft/schema#',
                 type: 'object',
                 properties: {
                   '/' => {},

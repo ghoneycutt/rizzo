@@ -40,5 +40,5 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'simplecov', '~> 0.14'
   spec.add_development_dependency 'yard', '~> 0.9'
   spec.add_dependency 'deep_merge', '~> 1.1'
-  spec.add_dependency 'json-schema', '~> 2.8'
+  spec.add_dependency 'json-schema', '>= 2.8.1'
 end
