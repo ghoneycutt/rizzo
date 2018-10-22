@@ -197,7 +197,9 @@ desc "With a valid ~/.rizzo.yaml file looking like:"
 cat > ~/.rizzo.yaml <<EOCONFIG
 ---
   defaults:
+    box: el6-rc5
     bootstrap_repo_path: "${HOME}/git/bootstrap"
+    memory: '1024'
   control_repos:
   - ${PUPPETDATA}
   - ${HOME}/git/ghoneycutt-modules
@@ -315,12 +317,9 @@ Vagrant.configure(2) do |config|
   end
 
   config.vm.define "puppetca", autostart: false do |cfg|
-    cfg.vm.box = nil
-    cfg.vm.box_url = nil
-    cfg.vm.box_download_checksum = nil
-    cfg.vm.box_download_checksum_type = nil
+    cfg.vm.box = "el6-rc5"
     cfg.vm.provider :virtualbox do |vb|
-      vb.customize ['modifyvm', :id, '--memory', nil]
+      vb.customize ['modifyvm', :id, '--memory', "1024"]
     end
     cfg.vm.hostname = nil
     cfg.vm.network 'private_network',

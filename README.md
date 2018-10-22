@@ -244,9 +244,9 @@ nodes:
     shutdown: false
     update_packages: false
     box: "mwrock/Windows2016"
-    box_url: ""
-    box_download_checksum: ""
-    box_download_checksum_type: ""
+    box_url: ~
+    box_download_checksum: ~
+    box_download_checksum_type: ~
 ```
 
 ### defaults

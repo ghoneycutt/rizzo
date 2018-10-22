@@ -62,6 +62,14 @@ RSpec.describe Rzo do
           expect(subject).to eq(fixture('_complete_Vagrantfile.rb'))
         end
       end
+
+      context 'with a config file that has null values' do
+        let(:rizzo_config) { '_test_nil_rizzo.yaml' }
+
+        it 'omits null values' do
+          expect(subject).to eq(fixture('_test_nil_Vagrantfile.rb'))
+        end
+      end
     end
   end
 end
