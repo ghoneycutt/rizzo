@@ -66,7 +66,7 @@ module Rzo
         opt :debug, 'Set log level to DEBUG {RZO_DEBUG="true"}',
             default: env['RZO_DEBUG'] == 'true'
         opt :config, 'Rizzo config file {RZO_CONFIG}',
-            default: env['RZO_CONFIG'] || '~/.rizzo.json'
+            default: env['RZO_CONFIG'] || '~/.rizzo.yaml'
       end
     end
     # rubocop:enable Metrics/MethodLength, Metrics/AbcSize
@@ -123,7 +123,7 @@ module Rzo
 usage: #{NAME} [GLOBAL OPTIONS] SUBCOMMAND [ARGS]
 Sub Commands:
 
-  config       Print out the combined rizzo json config
+  config       Print out the combined rizzo yaml config
   generate     Initialize Vagrantfile in top control repo
   roles        Output all roles defined in the combined config
 

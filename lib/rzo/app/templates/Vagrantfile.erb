@@ -13,18 +13,28 @@ Vagrant.configure(2) do |config|
 
   config.vm.define <%= nc['name'].inspect %>, autostart: false do |cfg|
     cfg.vm.box = <%= nc['box'].inspect %>
+    <%- if nc['box_url'] -%>
     cfg.vm.box_url = <%= nc['box_url'].inspect %>
+    <%- end -%>
+    <%- if nc['box_download_checksum'] -%>
     cfg.vm.box_download_checksum = <%= nc['box_download_checksum'].inspect %>
+    <%- end -%>
+    <%- if nc['box_download_checksum_type'] -%>
     cfg.vm.box_download_checksum_type = <%= nc['box_download_checksum_type'].inspect %>
+    <%- end -%>
     <%- if nc['boot_timeout'] -%>
     cfg.vm.boot_timeout = <%= nc['boot_timeout'].inspect %>
     <%- end -%>
+    <%- if nc['memory'] || nc['gui'] -%>
     cfg.vm.provider :virtualbox do |vb|
+      <%- if nc['memory'] -%>
       vb.customize ['modifyvm', :id, '--memory', <%= nc['memory'].inspect %>]
+      <%- end -%>
       <%- if nc['gui'] -%>
       vb.gui = <%= nc['gui'].inspect %>
       <%- end -%>
     end
+    <%- end -%>
     <%- if nc['windows'] == true -%>
     cfg.vm.guest = :windows
     cfg.vm.communicator = :winrm

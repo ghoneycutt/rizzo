@@ -7,15 +7,15 @@ module Rzo
     ##
     # Mix-in module providing configuration validation methods and safety
     # checking.  The goal is to provide useful feedback to the end user in the
-    # situation where ~/.rizzo.json is configured to point at directories which
+    # situation where ~/.rizzo.yaml is configured to point at directories which
     # do not exist, have missing keys, etc...
     # rubocop:disable Metrics/ModuleLength
     module ConfigValidation
       ## Rizzo configuration schema for the personal configuration file at
-      # ~/.rizzo.json.  Minimum necessary to load the complete configuration from
+      # ~/.rizzo.yaml.  Minimum necessary to load the complete configuration from
       # all control repositories.
       RZO_PERSONAL_CONFIG_SCHEMA = {
-        '$schema' => 'http://json-schema.org/draft-06/schema#',
+        '$schema' => 'http://json-schema.org/draft/schema#',
         title: 'Personal Configuration',
         description: 'Rizzo personal configuration file',
         type: 'object',
@@ -60,7 +60,7 @@ module Rzo
                 items: { type: 'string' },
               },
               synced_folders: {
-                '$schema' => 'http://json-schema.org/draft-06/schema#',
+                '$schema' => 'http://json-schema.org/draft/schema#',
                 type: 'object',
                 properties: {
                   '/' => {},
@@ -160,7 +160,7 @@ module Rzo
 
       ##
       # Validate a personal configuration, typically originating from
-      # ~/.rizzo.json. This configuration is necessary to build a complete
+      # ~/.rizzo.yaml. This configuration is necessary to build a complete
       # control repo configuration using the top level control repo. This
       # validation focuses on the minimum necessary configuration to bootstrap
       # the complete configuration, primarily the repo locations and existence.
@@ -175,9 +175,9 @@ module Rzo
 
       ##
       # Validate a complete loaded configuration.  This is distinct from a base
-      # configuration in that the JSON files in each control repository have
+      # configuration in that the YAML files in each control repository have
       # already been merged, in order, on top of the base configuration
-      # originating at ~/.rizzo.json.  This implements safety checking.  These
+      # originating at ~/.rizzo.yaml.  This implements safety checking.  These
       # methods are expected to execute within the context of a
       # Rzo::App::Subcommand instance, therefore log methods and the parsed
       # configuration are assumed to be available.

@@ -4,7 +4,7 @@
 :syslog: false
 :verbose: false
 :debug: false
-:config: "~/.rizzo.json"
+:config: "~/.rizzo.yaml"
 :version: false
 :help: false
 :subcommand: config

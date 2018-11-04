@@ -4,14 +4,14 @@ Rizzo is a heavily customized Vagrant configuration and work flow with a
 role based focus. It is meant to make working with Vagrant easier and
 purpose built for layered Puppet control repositories.
 
-Rizzo loads a personal configuration file, `~/.rizzo.json` by default, which
+Rizzo loads a personal configuration file, `~/.rizzo.yaml` by default, which
 lists one or more control repositories. Rizzo then looks for and loads a
-`.rizzo.json` configuration file located at the root of the top level control
+`.rizzo.yaml` configuration file located at the root of the top level control
 repository. The top level control repository is the first listed in
 the array of control repositories in the personal configuration file.
 
 There should be at least one node for every role that is managed by a
-control repo. This information is stored in `.rizzo.json` under the
+control repo. This information is stored in `.rizzo.yaml` under the
 control repo. This makes it apparent what roles are available and aids
 in functional testing.
 
@@ -61,7 +61,7 @@ bundle exec rizzo --help
 usage: rizzo [GLOBAL OPTIONS] SUBCOMMAND [ARGS]
 Sub Commands:
 
-  config       Print out the combined rizzo json config
+  config       Print out the combined rizzo yaml config
   generate     Initialize Vagrantfile in top control repo
 
 Global options: (Note, command line arguments supersede ENV vars in {}'s)
@@ -69,12 +69,12 @@ Global options: (Note, command line arguments supersede ENV vars in {}'s)
   -s, --syslog        Log to syslog
   -v, --verbose       Set log level to INFO
   -d, --debug         Set log level to DEBUG
-  -c, --config=<s>    Rizzo config file {RZO_CONFIG} (default: ~/.rizzo.json)
+  -c, --config=<s>    Rizzo config file {RZO_CONFIG} (default: ~/.rizzo.yaml)
   -e, --version       Print version and exit
   -h, --help          Show this message
 ```
 
-Once rizzo is installed, setup your configuration file, `~/.rizzo.json`, then
+Once rizzo is installed, setup your configuration file, `~/.rizzo.yaml`, then
 use `bundle exec rizzo generate` to write the `Vagrantfile` in your control
 repo.
 
@@ -94,48 +94,40 @@ repo.
 
 # Setup
 
-## `~/.rizzo.json`
+## `~/.rizzo.yaml`
 
-The personal configuration file is loaded first, from `~/.rizzo.json` by default.
+The personal configuration file is loaded first, from `~/.rizzo.yaml` by default.
 The global `--config` option allows the end user to specific a different path to
 the personal configuration file.
 
 Using this example, change the paths to your git repos:
 
-```json
-{
-  "defaults": {
-    "bootstrap_repo_path": "/Users/gh/git/bootstrap"
-  },
-  "control_repos": [
-    "/Users/gh/git/puppet-control-myteam",
-    "/Users/gh/git/puppetdata",
-    "/Users/gh/git/puppet-modules"
-  ],
-  "puppetmaster": {
-    "name": "infra-puppetca",
-    "modulepath": [
-      "./modules",
-      "./puppetdata/modules",
-      "./ghoneycutt/modules"
-    ],
-    "synced_folders": {
-      "/repos/puppetdata": {
-        "local": "/Users/gh/git/puppetdata",
-        "owner": "root",
-        "group": "root"
-      },
-      "/repos/ghoneycutt": {
-        "local": "/Users/gh/git/puppet-modules",
-        "owner": "root",
-        "group": "root"
-      }
-    }
-  }
-}
+```yaml
+---
+defaults:
+  bootstrap_repo_path: "/Users/gh/git/bootstrap"
+control_repos:
+- "/Users/gh/git/puppet-control-myteam"
+- "/Users/gh/git/puppetdata"
+- "/Users/gh/git/puppet-modules"
+puppetmaster:
+  name: "infra-puppetca"
+  modulepath:
+  - "./modules"
+  - "./puppetdata/modules"
+  - "./ghoneycutt/modules"
+  synced_folders:
+    /repos/puppetdata:
+      local: "/Users/gh/git/puppetdata"
+      owner: "root"
+      group: "root"
+    /repos/ghoneycutt:
+      local: "/Users/gh/git/puppet-modules"
+      owner: "root"
+      group: "root"
 ```
 
-Once you have a personal config file, `~/.rizzo.json`, change directories to
+Once you have a personal config file, `~/.rizzo.yaml`, change directories to
 your top level control repository and generate your `Vagrantfile`:
 
 ```shell
@@ -171,15 +163,15 @@ VM, run `vagrant status NAME`.
 ### defaults
 
 The defaults hash is merged with each node entries hash. Put user
-specific entries in the personal configuration file at `~/.rizzo.json` and
-control repo specific entries in `${PATH_TO_CONTROL_REPO}/.rizzo.json`.
+specific entries in the personal configuration file at `~/.rizzo.yaml` and
+control repo specific entries in `${PATH_TO_CONTROL_REPO}/.rizzo.yaml`.
 
 ### control_repos
 
 The control_repos array is a list of control repos. Rizzo takes the
 approach that control repos are layered. The ordering should match your
 `puppetmaster['modulepath']` array. The first control repo with a
-`.rizzo.json` in it will have that Rizzo config used.
+`.rizzo.yaml` in it will have that Rizzo config used.
 
 ### puppetmaster
 
@@ -207,71 +199,54 @@ local, which is the path on the host and owner and group which are the
 owner and group permissions the directory will be mounted with on the
 guest.
 
-## `controlrepo/.rizzo.json`
+## `controlrepo/.rizzo.yaml`
 
-```json
-{
-  "defaults": {
-    "bootstrap_script_path": "bootstrap_puppet4.sh",
-    "bootstrap_script_args": "-l -f `hostname -f`",
-    "bootstrap_guest_path": "/tmp/bootstrap",
-    "boot_timeout": 500,
-    "box": "centos7.box",
-    "box_url": "https://vagrantboxes/centos7.box",
-    "box_download_checksum": "3764a2c4ae3829aa4b50971e216c3a03736aafb2",
-    "box_download_checksum_type": "sha1",
-    "memory": "1024",
-    "netmask": "255.255.255.0",
-    "update_packages": true,
-    "update_packages_command": "yum -y update",
-    "shutdown": true,
-    "shutdown_command": "/sbin/shutdown -h now"
-  },
-  "nodes": [
-    {
-      "name": "infra-puppetca",
-      "hostname": "infra-puppetca1.example.org",
-      "forwarded_ports": [
-        {
-          "guest": "8140",
-          "host": "8140"
-        }
-      ],
-      "ip": "172.16.100.5",
-      "memory": "2048"
-    },
-    {
-      "name": "infra-puppet",
-      "hostname": "infra-puppet1.example.org",
-      "ip": "172.16.100.6",
-      "memory": "2048"
-    },
-    {
-      "name": "www-api",
-      "hostname": "www-api1.example.org",
-      "ip": "172.16.100.7"
-    },
-    {
-      "name": "mssql1",
-      "hostname": "mysql1.example.org",
-      "forwarded_ports": [
-        {
-          "guest": "5985",
-          "host": "5985"
-        }
-      ],
-      "ip": "172.16.100.8",
-      "windows": true,
-      "gui": true,
-      "shutdown": false,
-      "update_packages": false,
-      "box": "mwrock/Windows2016",
-      "box_url": "",
-      "box_download_checksum": "",
-      "box_download_checksum_type": ""
-    }
-  ]
-}
+```yaml
+---
+defaults:
+  bootstrap_script_path: "bootstrap_puppet4.sh"
+  bootstrap_script_args: "-l -f `hostname -f`"
+  bootstrap_guest_path: "/tmp/bootstrap"
+  boot_timeout: 500
+  box: "centos7.box"
+  box_url: "https://vagrantboxes/centos7.box"
+  box_download_checksum: "3764a2c4ae3829aa4b50971e216c3a03736aafb2"
+  box_download_checksum_type: "sha1"
+  memory: "1024"
+  netmask: "255.255.255.0"
+  update_packages: true
+  update_packages_command: "yum -y update"
+  shutdown: true
+  shutdown_command: "/sbin/shutdown -h now"
+nodes:
+  - name: "infra-puppetca"
+    hostname: "infra-puppetca1.example.org"
+    forwarded_ports:
+    - guest: "8140"
+      host: "8140"
+    ip: "172.16.100.5"
+    memory: "2048"
+  - name: "infra-puppet"
+    hostname: "infra-puppet1.example.org"
+    ip: "172.16.100.6"
+    memory: "2048"
+  - name: "www-api"
+    hostname: "www-api1.example.org"
+    ip: "172.16.100.7"
+  - name: "mssql1"
+    hostname: "mysql1.example.org"
+    forwarded_ports:
+    - guest: "5985"
+      host: "5985"
+    ip: "172.16.100.8"
+    windows: true
+    gui: true
+    shutdown: false
+    update_packages: false
+    box: "mwrock/Windows2016"
+    box_url: ~
+    box_download_checksum: ~
+    box_download_checksum_type: ~
 ```
 
 ### defaults
