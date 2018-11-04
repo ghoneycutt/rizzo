@@ -199,6 +199,7 @@ cat > ~/.rizzo.yaml <<EOCONFIG
   defaults:
     box: el6-rc5
     bootstrap_repo_path: "${HOME}/git/bootstrap"
+    bootstrap_guest_path: "/etc/bootstrap"
   control_repos:
   - ${PUPPETDATA}
   - ${HOME}/git/ghoneycutt-modules
@@ -317,19 +318,15 @@ Vagrant.configure(2) do |config|
 
   config.vm.define "puppetca", autostart: false do |cfg|
     cfg.vm.box = "el6-rc5"
-    cfg.vm.hostname = nil
-    cfg.vm.network 'private_network',
-      ip: nil,
-      netmask: nil
     cfg.vm.synced_folder "${PUPPETDATA}", "/repos/puppetdata",
       owner: "root", group: "root"
     cfg.vm.synced_folder "${HOME}/git/ghoneycutt-modules", "/repos/ghoneycutt",
       owner: "root", group: "root"
     cfg.vm.synced_folder "${HOME}/git/bootstrap",
-      nil,
+      "/etc/bootstrap",
       owner: 'vagrant', group: 'root'
-    cfg.vm.provision 'shell', inline: "echo 'modulepath = ./modules:./puppetdata/modules:./ghoneycutt/modules' > /environment.conf"
-    cfg.vm.provision 'shell', inline: "/bin/bash / "
+    cfg.vm.provision 'shell', inline: "echo 'modulepath = ./modules:./puppetdata/modules:./ghoneycutt/modules' > /etc/bootstrap/environment.conf"
+    cfg.vm.provision 'shell', inline: "/bin/bash /etc/bootstrap/ "
   end
 end
 # -*- mode: ruby -*-
