@@ -134,6 +134,7 @@ module Rzo
 
         # nodes is used by the Vagrantfile.erb template
         nodes = [*puppet_master_nodes, *agent_nodes]
+        validate_nodes!(nodes)
         content = renderer.result(binding)
         content
       end

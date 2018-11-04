@@ -342,5 +342,42 @@ else
   fail "actual Vagrantfile does not match expected file"
 fi
 
+desc "Invalid node definitions should cause an error."
+cat > ~/.rizzo.yaml <<EOCONFIG
+---
+  defaults:
+    bootstrap_repo_path: "${HOME}/git/bootstrap"
+    bootstrap_guest_path: "/etc/bootstrap"
+  control_repos:
+  - ${PUPPETDATA}
+  - ${HOME}/git/ghoneycutt-modules
+  puppetmaster:
+    name:
+    - puppetca
+    - puppet
+    modulepath:
+    - ./modules
+    - ./puppetdata/modules
+    - ./ghoneycutt/modules
+    synced_folders:
+      /repos/puppetdata:
+        local: "${PUPPETDATA}"
+        owner: "root"
+        group: "root"
+      /repos/ghoneycutt:
+        local: "${HOME}/git/ghoneycutt-modules"
+        owner: "root"
+        group: "root"
+EOCONFIG
+set +e
+rzo generate 2> $stderr > $stdout
+ret=$?
+set -e
+if [ $ret -eq 2 ]; then
+  pass "It does."
+else
+  fail "Invalid nodes definition did not cause an error, ret=$ret"
+fi
+
 desc "END of functional testing"
 pass "Functional testing completed successfully."

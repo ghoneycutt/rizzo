@@ -72,4 +72,22 @@ RSpec.describe Rzo do
       end
     end
   end
+
+  describe 'generate errors' do
+    let(:argv) { ['generate'] }
+    describe 'raise errors' do
+      # The actual Vagrantfile content written to disk
+      subject do
+        allow(app.generate).to receive(:validate_existence).and_return(nil)
+        app.run
+      end
+      context 'with invalid nodes' do
+        let(:rizzo_config) { '_invalid_nodes.yaml' }
+
+        it 'fails' do
+          expect(subject).to eq(2)
+        end
+      end
+    end
+  end
 end

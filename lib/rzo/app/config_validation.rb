@@ -114,11 +114,21 @@ module Rzo
           }
         },
       }.freeze
+      RZO_NODE_SCHEMA = {
+        type: 'object',
+        required: %w[box],
+        properties: {
+          box: {
+            type: 'string',
+          },
+        },
+      }.freeze
       # The checks to execute, in order.  Each method must return nil if there
       # are no issues found.  Otherwise, the check should return either one, or
       # an array of Issue instances.
       CHECKS_PERSONAL_CONFIG = %i[validate_personal_schema validate_control_repos].freeze
       CHECKS_REPO_CONFIG = %i[validate_schema validate_defaults_key validate_control_repos].freeze
+      CHECKS_NODES = %i[validate_nodes].freeze
 
       ##
       # Class to model an issue found during validation
@@ -290,7 +300,7 @@ module Rzo
       #
       # @param [Array<Issue>] issues Array of issues.  Each hash must have at
       # least a key named `:message`
-      def validate_inform!(issues)
+      def validate_inform!(issues, opts = {})
         if opts[:validate]
           msg = "Validation issues found with #{opts[:config]}"
           exc = ErrorAndExit.new(msg, 2)
@@ -298,6 +308,26 @@ module Rzo
           raise exc
         else
           issues.each { |i| log.warn(i.to_s) }
+        end
+      end
+
+      def validate_nodes!(nodes)
+        issues = compute_issues(CHECKS_NODES, nodes)
+        if issues.empty?
+          debug 'No issues detected with the node definitions.'
+        else
+          validate_inform!(issues, { :validate => true, :config => 'nodes' })
+        end
+      end
+
+      # Validate node hash
+      def validate_nodes(nodes)
+        if JSON::Validator.validate(RZO_NODE_SCHEMA, nodes, :list => true)
+          debug 'No node definition violations found.'
+          return nil
+        else
+          err_msgs = JSON::Validator.fully_validate(RZO_NODE_SCHEMA, nodes, :list => true)
+          return err_msgs.map { |msg| Issue.new("Node definition problem: #{msg}") }
         end
       end
     end
