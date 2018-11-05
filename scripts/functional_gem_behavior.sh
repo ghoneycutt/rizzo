@@ -199,6 +199,7 @@ cat > ~/.rizzo.yaml <<EOCONFIG
   defaults:
     box: el6-rc5
     bootstrap_repo_path: "${HOME}/git/bootstrap"
+    bootstrap_guest_path: "/etc/bootstrap"
   control_repos:
   - ${PUPPETDATA}
   - ${HOME}/git/ghoneycutt-modules
@@ -317,19 +318,15 @@ Vagrant.configure(2) do |config|
 
   config.vm.define "puppetca", autostart: false do |cfg|
     cfg.vm.box = "el6-rc5"
-    cfg.vm.hostname = nil
-    cfg.vm.network 'private_network',
-      ip: nil,
-      netmask: nil
     cfg.vm.synced_folder "${PUPPETDATA}", "/repos/puppetdata",
       owner: "root", group: "root"
     cfg.vm.synced_folder "${HOME}/git/ghoneycutt-modules", "/repos/ghoneycutt",
       owner: "root", group: "root"
     cfg.vm.synced_folder "${HOME}/git/bootstrap",
-      nil,
+      "/etc/bootstrap",
       owner: 'vagrant', group: 'root'
-    cfg.vm.provision 'shell', inline: "echo 'modulepath = ./modules:./puppetdata/modules:./ghoneycutt/modules' > /environment.conf"
-    cfg.vm.provision 'shell', inline: "/bin/bash / "
+    cfg.vm.provision 'shell', inline: "echo 'modulepath = ./modules:./puppetdata/modules:./ghoneycutt/modules' > /etc/bootstrap/environment.conf"
+    cfg.vm.provision 'shell', inline: "/bin/bash /etc/bootstrap/ "
   end
 end
 # -*- mode: ruby -*-
@@ -343,6 +340,43 @@ if diff -U2 $expected $actual; then
   pass "It does."
 else
   fail "actual Vagrantfile does not match expected file"
+fi
+
+desc "Invalid node definitions should cause an error."
+cat > ~/.rizzo.yaml <<EOCONFIG
+---
+  defaults:
+    bootstrap_repo_path: "${HOME}/git/bootstrap"
+    bootstrap_guest_path: "/etc/bootstrap"
+  control_repos:
+  - ${PUPPETDATA}
+  - ${HOME}/git/ghoneycutt-modules
+  puppetmaster:
+    name:
+    - puppetca
+    - puppet
+    modulepath:
+    - ./modules
+    - ./puppetdata/modules
+    - ./ghoneycutt/modules
+    synced_folders:
+      /repos/puppetdata:
+        local: "${PUPPETDATA}"
+        owner: "root"
+        group: "root"
+      /repos/ghoneycutt:
+        local: "${HOME}/git/ghoneycutt-modules"
+        owner: "root"
+        group: "root"
+EOCONFIG
+set +e
+rzo generate 2> $stderr > $stdout
+ret=$?
+set -e
+if [ $ret -eq 2 ]; then
+  pass "It does."
+else
+  fail "Invalid nodes definition did not cause an error, ret=$ret"
 fi
 
 desc "END of functional testing"

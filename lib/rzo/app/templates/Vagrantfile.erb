@@ -40,11 +40,15 @@ Vagrant.configure(2) do |config|
     cfg.vm.communicator = :winrm
     cfg.vm.hostname = <%= nc['name'].inspect %>
     <%- else -%>
+    <%- if nc['hostname'] -%>
     cfg.vm.hostname = <%= nc['hostname'].inspect %>
     <%- end -%>
+    <%- end -%>
+    <%- if nc['ip'] && nc['netmask'] -%>
     cfg.vm.network 'private_network',
       ip: <%= nc['ip'].inspect %>,
       netmask: <%= nc['netmask'].inspect %>
+    <%- end -%>
     <%- [*nc['forwarded_ports']].each do |forwarded_port| -%>
     cfg.vm.network 'forwarded_port',
       guest: <%= forwarded_port['guest'].inspect %>,
@@ -55,7 +59,7 @@ Vagrant.configure(2) do |config|
     cfg.vm.synced_folder <%= v['local'].inspect %>, <%= k.inspect %>,
       owner: <%= v['owner'].inspect %>, group: <%= v['group'].inspect %>
     <%- end -%>
-    <%- if nc['bootstrap_repo_path'] -%>
+    <%- if nc['bootstrap_repo_path'] && nc['bootstrap_guest_path'] -%>
     cfg.vm.synced_folder <%= nc['bootstrap_repo_path'].inspect %>,
       <%= nc['bootstrap_guest_path'].inspect %>,
       owner: 'vagrant', group: 'root'
